@@ -550,6 +550,7 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
           format: int64
         username:
           type: string
@@ -564,9 +565,13 @@ components:
         phone:
           type: string
         userStatus:
-          type: integer
-          format: int32
+          type: string
           description: User Status
+      required: 
+        - username
+        - firstName
+        - lastName
+        - email
       xml:
         name: User
     Category:
@@ -584,8 +589,8 @@ components:
         - photoUrls
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
         category:
           $ref: '#/components/schemas/Category'
         name:
