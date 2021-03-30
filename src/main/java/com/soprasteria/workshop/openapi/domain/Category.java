@@ -3,10 +3,10 @@ package com.soprasteria.workshop.openapi.domain;
 import java.util.UUID;
 
 public class Category {
-    private String name;
+    private final String name;
     private UUID id;
 
-    public void setName(String name) {
+    public Category(String name) {
         this.name = name;
     }
 

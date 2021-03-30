@@ -6,6 +6,7 @@ import org.fluentjdbc.DatabaseSaveResult;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextSelectBuilder;
 import org.fluentjdbc.DbContextTable;
+import org.fluentjdbc.DbContextTableAlias;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,7 +23,7 @@ public class CategoryRepository implements Repository<Category> {
     @Override
     public DatabaseSaveResult.SaveStatus save(Category o) {
         DatabaseSaveResult<UUID> result = table.newSaveBuilderWithUUID("id", o.getId())
-                .setField("name", o.getName())
+                .uniqueKey("name", o.getName())
                 .execute();
         o.setId(result.getId());
         return result.getSaveStatus();
@@ -39,11 +40,14 @@ public class CategoryRepository implements Repository<Category> {
                 .orElseThrow(() -> new EntityNotFoundException(Category.class, id));
     }
 
-    private static Category toCategory(DatabaseRow row) throws SQLException {
-        Category category = new Category();
+    static Category toCategory(DatabaseRow row) throws SQLException {
+        Category category = new Category(row.getString("name"));
         category.setId(row.getUUID("id"));
-        category.setName(row.getString("name"));
         return category;
+    }
+
+    public DbContextTableAlias tableAlias(String alias) {
+        return table.alias(alias);
     }
 
     public static class CategoryQuery implements Query<Category> {
