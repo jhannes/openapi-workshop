@@ -1,10 +1,12 @@
 package com.soprasteria.workshop.openapi;
 
+import com.soprasteria.workshop.openapi.domain.repository.EntityNotFoundException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
 import org.h2.jdbcx.JdbcDataSource;
@@ -25,6 +27,8 @@ public class PetApiFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try (DbContextConnection ignored = dbContext.startConnection(getDataSource())) {
             chain.doFilter(request, response);
+        } catch (EntityNotFoundException e) {
+            ((HttpServletResponse)response).sendError(404, e.getMessage());
         }
     }
 

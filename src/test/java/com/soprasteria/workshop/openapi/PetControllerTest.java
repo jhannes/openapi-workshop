@@ -3,12 +3,12 @@ package com.soprasteria.workshop.openapi;
 import com.soprasteria.workshop.openapi.domain.Category;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
+import com.soprasteria.workshop.openapi.domain.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -21,6 +21,7 @@ import static com.soprasteria.workshop.openapi.generated.petstore.PetDto.StatusE
 import static com.soprasteria.workshop.openapi.generated.petstore.PetDto.StatusEnum.PENDING;
 import static com.soprasteria.workshop.openapi.generated.petstore.PetDto.StatusEnum.SOLD;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PetControllerTest extends AbstractDatabaseTest {
     private static final Random random = new Random();
@@ -51,8 +52,12 @@ class PetControllerTest extends AbstractDatabaseTest {
         assertThat(controller.getPetById(petId)).usingRecursiveComparison().isEqualTo(petDto);
     }
     
-    // TODO: Throws NotFound
-    
+    @Test
+    void throwsOnNotFound() {
+        assertThatThrownBy(() -> controller.getPetById(UUID.randomUUID()))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
     @Test
     void shouldListPetsByStatus() {
         UUID categoryId = pickOneFromList(controller.listCategories()).getId();
