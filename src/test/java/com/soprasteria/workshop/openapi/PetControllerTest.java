@@ -8,6 +8,7 @@ import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -49,6 +50,8 @@ class PetControllerTest extends AbstractDatabaseTest {
 
         assertThat(controller.getPetById(petId)).usingRecursiveComparison().isEqualTo(petDto);
     }
+    
+    // TODO: Throws NotFound
     
     @Test
     void shouldListPetsByStatus() {
@@ -98,6 +101,18 @@ class PetControllerTest extends AbstractDatabaseTest {
         assertThat(controller.getPetById(petId))
                 .usingRecursiveComparison()
                 .isEqualTo(updatedPet);
+    }
+    
+    @Test
+    void shouldUpdatePetWithForm() {
+        UUID categoryId = pickOneFromList(controller.listCategories()).getId();
+        UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("To be updated"));
+        
+        controller.updatePetWithForm(petId, Optional.of("New Name"), Optional.empty());
+        assertThat(controller.getPetById(petId).getName()).isEqualTo("New Name");
+
+        controller.updatePetWithForm(petId, Optional.empty(), Optional.of(PENDING.getValue()));
+        assertThat(controller.getPetById(petId).getStatus()).isEqualTo(PENDING);
     }
     
 

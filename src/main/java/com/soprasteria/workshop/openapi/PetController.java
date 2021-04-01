@@ -141,7 +141,11 @@ public class PetController {
             @RequestParam("name") Optional<String> name,
             @RequestParam("status") Optional<String> status
     ) {
-        // TODO
+        Pet pet = petRepository.retrieve(petId);
+        name.ifPresent(pet::setName);
+        status.map(PetDto.StatusEnum::fromValue).map(this::fromDto)
+                .ifPresent(pet::setStatus);
+        petRepository.save(pet);
     }
 
     /**
