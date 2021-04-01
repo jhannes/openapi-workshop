@@ -52,15 +52,28 @@ class PetControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldListPetsByStatus() {
-        CategoryDto category = pickOneFromList(controller.listCategories());
-        controller.addPet(new PetDto().category(new CategoryDto().id(category.getId())).name("Available").status(AVAILABLE));
-        controller.addPet(new PetDto().category(new CategoryDto().id(category.getId())).name("Pending").status(PENDING));
-        controller.addPet(new PetDto().category(new CategoryDto().id(category.getId())).name("Sold").status(SOLD));
+        UUID categoryId = pickOneFromList(controller.listCategories()).getId();
+        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("Available").status(AVAILABLE));
+        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("Pending").status(PENDING));
+        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("Sold").status(SOLD));
         
         assertThat(controller.findPetsByStatus(Optional.of(List.of(AVAILABLE.getValue(), PENDING.getValue()))))
                 .extracting(PetDto::getName)
                 .contains("Available", "Pending")
                 .doesNotContain("Sold");
+    }
+    
+    @Test
+    void shouldDeletePet() {
+        UUID categoryId = pickOneFromList(controller.listCategories()).getId();
+        UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("To be deleted"));
+        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("To be retained"));
+        
+        controller.deletePet(petId);
+        assertThat(controller.findPetsByStatus(Optional.empty()))
+                .extracting(PetDto::getName)
+                .contains("To be retained")
+                .doesNotContain("To be deleted");
     }
     
 
