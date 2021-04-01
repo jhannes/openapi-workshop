@@ -6,26 +6,34 @@ import com.soprasteria.workshop.openapi.domain.PetStatus;
 import org.fluentjdbc.DatabaseRow;
 import org.fluentjdbc.DatabaseSaveResult;
 import org.fluentjdbc.DbContext;
-import org.fluentjdbc.DbContextSelectBuilder;
+import org.fluentjdbc.DbContextJoinedSelectBuilder;
 import org.fluentjdbc.DbContextTable;
 import org.fluentjdbc.DbContextTableAlias;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+@SuppressWarnings("ALL")
 public class PetRepository implements Repository<Pet> {
 
     private final DbContextTable table;
     private final DbContextTable tagsTable;
     private final DbContextTable urlsTable;
     private final CategoryRepository categoryRepository;
+    public DbContextTableAlias tableAlias;
+    public DbContextTableAlias cAlias;
 
     public PetRepository(DbContext context) {
         table = context.table("PETS");
         tagsTable = context.table("PETS_TAGS");
         urlsTable = context.table("PETS_URLS");
         categoryRepository = new CategoryRepository(context);
+        tableAlias = table.alias("p");
+        cAlias = categoryRepository.tableAlias("c");
     }
 
     @Override
@@ -47,8 +55,8 @@ public class PetRepository implements Repository<Pet> {
     }
 
     @Override
-    public Query<Pet> query() {
-        return new PetQuery(table.query());
+    public PetQuery query() {
+        return new PetQuery(tableAlias.select().query());
     }
 
     private static Pet toPet(DatabaseRow row) throws SQLException {
@@ -79,17 +87,19 @@ public class PetRepository implements Repository<Pet> {
     }
 
     public PetEntity retrieveEntity(UUID id) {
-        DbContextTableAlias p = table.alias("p");
-        DbContextTableAlias c = categoryRepository.tableAlias("c");
-        
-        return p.join(p.column("category_id"), c.column("id"))
+        return tableAlias.join(tableAlias.column("category_id"), cAlias.column("id"))
                 .where("p.id", id)
-                .singleObject(row -> new PetEntity(
-                        toPet(row.table(p)),
-                        CategoryRepository.toCategory(row.table(c)),
-                        listTags(id),
-                        listUrls(id)
-        )).orElseThrow(() -> new EntityNotFoundException(Pet.class, id));
+                .singleObject(this::toEntity)
+                .orElseThrow(() -> new EntityNotFoundException(Pet.class, id));
+    }
+
+    private PetEntity toEntity(DatabaseRow row) throws SQLException {
+        return new PetEntity(
+                toPet(row.table(tableAlias)),
+                CategoryRepository.toCategory(row.table(cAlias)),
+                listTags(row.table(tableAlias).getUUID("id")),
+                listUrls(row.table(tableAlias).getUUID("id"))
+        );
     }
 
     private List<String> listUrls(UUID id) {
@@ -100,17 +110,32 @@ public class PetRepository implements Repository<Pet> {
         return tagsTable.query().where("pet_id", id).listStrings("tag");
     }
 
-    public static class PetQuery implements Query<Pet> {
+    public class PetQuery implements Query<Pet> {
 
-        private final DbContextSelectBuilder query;
+        private final DbContextJoinedSelectBuilder query;
 
-        public PetQuery(DbContextSelectBuilder query) {
+        public PetQuery(DbContextJoinedSelectBuilder query) {
             this.query = query;
         }
 
         @Override
-        public List<Pet> list() {
-            return query.list(PetRepository::toPet);
+        public Stream<Pet> stream() {
+            return query.stream(PetRepository::toPet);
+        }
+
+        public PetQuery status(Optional<Stream<PetStatus>> statuses) {
+            statuses.ifPresent(this::status);
+            return this;
+        }
+
+        private void status(Stream<PetStatus> statuses) {
+            query.whereIn("status", statuses.collect(Collectors.toList()));
+        }
+
+        public Stream<PetEntity> streamEntities() {
+            return query
+                .join(tableAlias.column("category_id"), cAlias.column("id"))
+                .stream(row -> toEntity(row));
         }
     }
 

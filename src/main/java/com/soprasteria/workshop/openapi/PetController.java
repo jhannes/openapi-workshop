@@ -41,7 +41,7 @@ public class PetController {
     @GET("/category")
     @JsonBody
     public Stream<CategoryDto> listCategories() {
-        return categoryRepository.query().list().stream()
+        return categoryRepository.query().stream()
                 .map(c -> new CategoryDto().id(c.getId()).name(c.getName()));
     }
 
@@ -82,10 +82,11 @@ public class PetController {
      */
     @GET("/pet/findByStatus")
     @JsonBody
-    public List<PetDto> findPetsByStatus(
-            @RequestParam("status") Optional<List<String>> status
-    ) {
-        return null;
+    public Stream<PetDto> findPetsByStatus(@RequestParam("status") Optional<List<String>> status) {
+        return petRepository.query()
+                .status(status.map(list -> list.stream().map(PetDto.StatusEnum::fromValue).map(this::fromDto)))
+                .streamEntities()
+                .map(this::toDto);
     }
 
     /**
@@ -114,15 +115,8 @@ public class PetController {
     @JsonBody
     public PetDto getPetById(@PathParam("petId") UUID petId) {
         PetEntity pet = petRepository.retrieveEntity(petId);
-        return new PetDto()
-                .name(pet.getPet().getName())
-                .id(pet.getPet().getId())
-                .status(toDto(pet.getPet().getStatus()))
-                .category(new CategoryDto().id(pet.getCategory().getId()).name(pet.getCategory().getName()))
-                .tags(pet.getTags())
-                .photoUrls(pet.getUrls());
+        return toDto(pet);
     }
-
 
     /**
      * Update an existing pet
@@ -130,9 +124,7 @@ public class PetController {
      * @param petDto Pet object that needs to be added to the store (optional)
      */
     @PUT("/pet")
-    public void updatePet(
-            @JsonBody PetDto petDto
-    ) {
+    public void updatePet(@JsonBody PetDto petDto) {
 
     }
 
@@ -168,6 +160,15 @@ public class PetController {
 
     }
 
+    private PetDto toDto(PetEntity pet) {
+        return new PetDto()
+                .name(pet.getPet().getName())
+                .id(pet.getPet().getId())
+                .status(toDto(pet.getPet().getStatus()))
+                .category(new CategoryDto().id(pet.getCategory().getId()).name(pet.getCategory().getName()))
+                .tags(pet.getTags())
+                .photoUrls(pet.getUrls());
+    }
 
     private PetStatus fromDto(PetDto.StatusEnum status) {
         if (status == PetDto.StatusEnum.AVAILABLE) {

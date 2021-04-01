@@ -9,18 +9,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.soprasteria.workshop.openapi.domain.SampleData.CATEGORIES;
+import static com.soprasteria.workshop.openapi.generated.petstore.PetDto.StatusEnum.AVAILABLE;
+import static com.soprasteria.workshop.openapi.generated.petstore.PetDto.StatusEnum.PENDING;
+import static com.soprasteria.workshop.openapi.generated.petstore.PetDto.StatusEnum.SOLD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PetControllerTest extends AbstractDatabaseTest {
     private static final Random random = new Random();
 
-    private PetController controller = new PetController(context);
+    private final PetController controller = new PetController(context);
 
     @BeforeEach
     public void insertCategories() {
@@ -45,6 +49,20 @@ class PetControllerTest extends AbstractDatabaseTest {
 
         assertThat(controller.getPetById(petId)).usingRecursiveComparison().isEqualTo(petDto);
     }
+    
+    @Test
+    void shouldListPetsByStatus() {
+        CategoryDto category = pickOneFromList(controller.listCategories());
+        controller.addPet(new PetDto().category(new CategoryDto().id(category.getId())).name("Available").status(AVAILABLE));
+        controller.addPet(new PetDto().category(new CategoryDto().id(category.getId())).name("Pending").status(PENDING));
+        controller.addPet(new PetDto().category(new CategoryDto().id(category.getId())).name("Sold").status(SOLD));
+        
+        assertThat(controller.findPetsByStatus(Optional.of(List.of(AVAILABLE.getValue(), PENDING.getValue()))))
+                .extracting(PetDto::getName)
+                .contains("Available", "Pending")
+                .doesNotContain("Sold");
+    }
+    
 
     private <T> T pickOneFromList(Stream<T> alternatives) {
         return pickOneFromList(alternatives.collect(Collectors.toList()));

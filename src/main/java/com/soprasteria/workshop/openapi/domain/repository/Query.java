@@ -1,7 +1,7 @@
 package com.soprasteria.workshop.openapi.domain.repository;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface Query<T> {
-    List<T> list();
+    Stream<T> stream();
 }

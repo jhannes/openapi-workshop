@@ -30,7 +30,7 @@ class PetRepositoryTest extends AbstractDatabaseTest {
         repository.save(pet1);
         repository.save(pet2);
         
-        assertThat(repository.query().list())
+        assertThat(repository.query().stream())
                 .extracting(Pet::getName)
                 .contains(pet1.getName(), pet2.getName());
     }

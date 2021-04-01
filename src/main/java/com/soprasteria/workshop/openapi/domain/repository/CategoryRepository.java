@@ -9,8 +9,8 @@ import org.fluentjdbc.DbContextTable;
 import org.fluentjdbc.DbContextTableAlias;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class CategoryRepository implements Repository<Category> {
 
@@ -58,8 +58,8 @@ public class CategoryRepository implements Repository<Category> {
         }
 
         @Override
-        public List<Category> list() {
-            return query.list(CategoryRepository::toCategory);
+        public Stream<Category> stream() {
+            return query.stream(CategoryRepository::toCategory);
         }
     }
 }

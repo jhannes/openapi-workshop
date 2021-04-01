@@ -20,7 +20,7 @@ class CategoryRepositoryTest extends AbstractDatabaseTest {
         repository.save(category1);
         repository.save(category2);
         
-        assertThat(repository.query().list())
+        assertThat(repository.query().stream())
                 .extracting(Category::getName)
                 .contains(category1.getName(), category2.getName());
     }

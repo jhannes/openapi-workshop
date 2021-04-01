@@ -26,7 +26,7 @@ public class SampleData {
         return pickOne("Bella", "Luna", "Charlie", "Lucy", "Cooper", "Max", "Bailey", "Daisy") + " " + random.nextInt(100);
     }
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     @SafeVarargs
     public static <T> T pickOne(T... alternatives) {
