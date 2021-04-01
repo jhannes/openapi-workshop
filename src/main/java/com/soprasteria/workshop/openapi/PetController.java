@@ -53,10 +53,7 @@ public class PetController {
     @POST("/pet")
     @ContentLocationHeader("/pet/{petId}")
     public UUID addPet(@JsonBody PetDto petDto) {
-        Pet pet = new Pet();
-        pet.setName(petDto.getName());
-        pet.setStatus(fromDto(petDto.getStatus()));
-        pet.setCategoryId(petDto.getCategory().getId());
+        Pet pet = fromDto(petDto);
         petRepository.save(pet);
         petRepository.saveUrls(pet, petDto.getPhotoUrls());
         petRepository.saveTags(pet, petDto.getTags());
@@ -101,6 +98,7 @@ public class PetController {
     @GET("/pet/findByTags")
     @JsonBody
     public List<PetDto> findPetsByTags(@RequestParam("tags") Optional<List<String>> tags) {
+        // TODO
         return null;
     }
 
@@ -114,8 +112,7 @@ public class PetController {
     @GET("/pet/{petId}")
     @JsonBody
     public PetDto getPetById(@PathParam("petId") UUID petId) {
-        PetEntity pet = petRepository.retrieveEntity(petId);
-        return toDto(pet);
+        return toDto(petRepository.retrieveEntity(petId));
     }
 
     /**
@@ -123,9 +120,12 @@ public class PetController {
      *
      * @param petDto Pet object that needs to be added to the store (optional)
      */
-    @PUT("/pet")
-    public void updatePet(@JsonBody PetDto petDto) {
-
+    @PUT("/pet/{petId}")
+    public void updatePet(@PathParam("petId") UUID petId, @JsonBody PetDto petDto) {
+        Pet pet = fromDto(petDto);
+        pet.setId(petId);
+        petRepository.save(pet);
+        petRepository.saveTags(pet, petDto.getTags());
     }
 
     /**
@@ -137,11 +137,11 @@ public class PetController {
      */
     @POST("/pet/{petId}")
     public void updatePetWithForm(
-            @PathParam("petId") String petId,
+            @PathParam("petId") UUID petId,
             @RequestParam("name") Optional<String> name,
             @RequestParam("status") Optional<String> status
     ) {
-
+        // TODO
     }
 
     /**
@@ -155,9 +155,17 @@ public class PetController {
     public void uploadFile(
             @PathParam("petId") Long petId,
             @RequestParam("additionalMetadata") Optional<String> additionalMetadata,
-            @RequestParam("file") Optional<File> file
+            @RequestParam("file") File file
     ) {
-
+        // TODO
+    }
+    
+    private Pet fromDto(PetDto petDto) {
+        Pet pet = new Pet();
+        pet.setName(petDto.getName());
+        pet.setStatus(fromDto(petDto.getStatus()));
+        pet.setCategoryId(petDto.getCategory().getId());
+        return pet;
     }
 
     private PetDto toDto(PetEntity pet) {

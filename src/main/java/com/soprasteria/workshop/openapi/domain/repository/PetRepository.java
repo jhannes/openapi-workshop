@@ -73,6 +73,7 @@ public class PetRepository implements Repository<Pet> {
     }
 
     public void saveTags(Pet pet, List<String> tags) {
+        tagsTable.where("pet_id", pet.getId()).executeDelete();
         for (String tag : tags) {
             tagsTable.newSaveBuilderWithUUID("id", null)
                     .uniqueKey("pet_id", pet.getId())

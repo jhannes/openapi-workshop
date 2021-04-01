@@ -75,6 +75,30 @@ class PetControllerTest extends AbstractDatabaseTest {
                 .contains("To be retained")
                 .doesNotContain("To be deleted");
     }
+
+    @Test
+    void shouldUpdatePet() {
+        List<CategoryDto> categories = controller.listCategories().collect(Collectors.toList());
+        UUID categoryId = categories.get(0).getId();
+        UUID petId = controller.addPet(new PetDto()
+                .category(new CategoryDto().id(categoryId))
+                .name("To be updated")
+                .tags(List.of("tag1", "tag2"))
+                .status(AVAILABLE)
+        );
+
+        PetDto updatedPet = new PetDto()
+                .id(petId)
+                .category(new CategoryDto().id(categories.get(1).getId()))
+                .name("Updated name")
+                .tags(List.of("tag3", "tag4"))
+                .status(SOLD);
+        controller.updatePet(petId, updatedPet);
+        updatedPet.setCategory(categories.get(1));
+        assertThat(controller.getPetById(petId))
+                .usingRecursiveComparison()
+                .isEqualTo(updatedPet);
+    }
     
 
     private <T> T pickOneFromList(Stream<T> alternatives) {

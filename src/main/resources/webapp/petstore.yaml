@@ -34,25 +34,6 @@ paths:
             - 'read:pets'
       requestBody:
         $ref: '#/components/requestBodies/Pet'
-    put:
-      tags:
-        - pet
-      summary: Update an existing pet
-      description: ''
-      operationId: updatePet
-      responses:
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Pet not found
-        '405':
-          description: Validation exception
-      security:
-        - petstore_auth:
-            - 'write:pets'
-            - 'read:pets'
-      requestBody:
-        $ref: '#/components/requestBodies/Pet'
   /pet/findByStatus:
     get:
       tags:
@@ -207,6 +188,25 @@ paths:
                 status:
                   description: Updated status of the pet
                   type: string
+    put:
+      tags:
+        - pet
+      summary: Update an existing pet
+      description: ''
+      operationId: updatePet
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+        '405':
+          description: Validation exception
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+      requestBody:
+        $ref: '#/components/requestBodies/Pet'
     delete:
       tags:
         - pet
@@ -269,6 +269,8 @@ paths:
                   description: file to upload
                   type: string
                   format: binary
+              required: 
+                - file
   /category:
     get:
       tags:
@@ -623,6 +625,7 @@ components:
           example: doggie
         photoUrls:
           type: array
+          readOnly: true
           xml:
             name: photoUrl
             wrapped: true
