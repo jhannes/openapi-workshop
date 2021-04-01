@@ -7,6 +7,8 @@ import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
 import com.soprasteria.workshop.openapi.domain.repository.PetRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
+import com.soprasteria.workshop.openapi.infrastructure.Multipart;
+import org.actioncontroller.ContentBody;
 import org.actioncontroller.ContentLocationHeader;
 import org.actioncontroller.DELETE;
 import org.actioncontroller.GET;
@@ -17,7 +19,9 @@ import org.actioncontroller.RequestParam;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,7 +59,6 @@ public class PetController {
     public UUID addPet(@JsonBody PetDto petDto) {
         Pet pet = fromDto(petDto);
         petRepository.save(pet);
-        petRepository.saveUrls(pet, petDto.getPhotoUrls());
         petRepository.saveTags(pet, petDto.getTags());
         return pet.getId();
     }
@@ -92,9 +95,7 @@ public class PetController {
      *
      * @param tags Tags to filter by (optional
      * @return List&lt;PetDto&gt;
-     * @deprecated
      */
-    @Deprecated
     @GET("/pet/findByTags")
     @JsonBody
     public List<PetDto> findPetsByTags(@RequestParam("tags") Optional<List<String>> tags) {
@@ -152,18 +153,26 @@ public class PetController {
      * uploads an image
      *
      * @param petId              ID of pet to update (required)
-     * @param additionalMetadata Additional data to pass to server (optional)
-     * @param file               file to upload (optional)
      */
     @POST("/pet/{petId}/uploadImage")
-    public void uploadFile(
-            @PathParam("petId") Long petId,
-            @RequestParam("additionalMetadata") Optional<String> additionalMetadata,
-            @RequestParam("file") File file
+    @ContentLocationHeader("/pet/images/{fileId}")
+    public UUID uploadFile(
+            @PathParam("petId") UUID petId,
+            @Multipart("file") InputStream fileContent,
+            @Multipart.Filename("file") String fileName
     ) {
-        // TODO
+        Pet pet = petRepository.retrieve(petId);
+        return petRepository.saveImage(pet, fileName, fileContent);
     }
-    
+
+    @GET("/pet/images/{fileId}")
+    @ContentBody(contentType = "image/png")
+    public byte[] getImage(@PathParam("fileId") UUID fileId) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        petRepository.readImage(fileId).transferTo(buffer);
+        return buffer.toByteArray();
+    }
+
     private Pet fromDto(PetDto petDto) {
         Pet pet = new Pet();
         pet.setName(petDto.getName());
@@ -179,7 +188,7 @@ public class PetController {
                 .status(toDto(pet.getPet().getStatus()))
                 .category(new CategoryDto().id(pet.getCategory().getId()).name(pet.getCategory().getName()))
                 .tags(pet.getTags())
-                .photoUrls(pet.getUrls());
+                .photoUrls(pet.getImages(), u -> "/pet/images/" + u);
     }
 
     private PetStatus fromDto(PetDto.StatusEnum status) {

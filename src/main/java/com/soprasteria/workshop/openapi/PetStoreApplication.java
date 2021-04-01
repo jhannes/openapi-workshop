@@ -3,9 +3,11 @@ package com.soprasteria.workshop.openapi;
 import com.soprasteria.workshop.openapi.infrastructure.ContentServlet;
 import com.soprasteria.workshop.openapi.infrastructure.WebJarServlet;
 import jakarta.servlet.DispatcherType;
+import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRegistration;
 import org.actioncontroller.jakarta.ApiJakartaServlet;
 import org.fluentjdbc.DbContext;
 import org.h2.jdbcx.JdbcDataSource;
@@ -36,7 +38,9 @@ public class PetStoreApplication implements ServletContextListener {
     }
 
     private void setupContext(ServletContext context) throws IOException {
-        context.addServlet("api", new ApiJakartaServlet(List.of(petController, storeController, userController))).addMapping("/api/*");
+        ServletRegistration.Dynamic apiRegistration = context.addServlet("api", new ApiJakartaServlet(List.of(petController, storeController, userController)));
+        apiRegistration.setMultipartConfig(new MultipartConfigElement("./tmp"));
+        apiRegistration.addMapping("/api/*");
         context.addServlet("content", new WebJarServlet("swagger-ui")).addMapping("/swagger-ui/*");
         context.addServlet("swagger-ui", new ContentServlet("/webapp/")).addMapping("/*");
         

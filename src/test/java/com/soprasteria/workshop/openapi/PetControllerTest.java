@@ -9,6 +9,11 @@ import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -27,6 +32,7 @@ class PetControllerTest extends AbstractDatabaseTest {
     private static final Random random = new Random();
 
     private final PetController controller = new PetController(context);
+    public UUID sampleCategoriId;
 
     @BeforeEach
     public void insertCategories() {
@@ -34,6 +40,7 @@ class PetControllerTest extends AbstractDatabaseTest {
         for (String categoryName : CATEGORIES) {
             repository.save(new Category(categoryName));
         }
+        sampleCategoriId = pickOneFromList(controller.listCategories()).getId();
     }
     
     @Test
@@ -43,8 +50,7 @@ class PetControllerTest extends AbstractDatabaseTest {
                 .category(new CategoryDto().id(category.getId()))
                 .name(randomName())
                 .status(pickOne(PetDto.StatusEnum.values()))
-                .tags(List.of("tag1", "tag2"))
-                .addPhotoUrlsItem("http://example.com/photo.jpg");
+                .tags(List.of("tag1", "tag2"));
         UUID petId = controller.addPet(petDto);
         petDto.setId(petId);
         petDto.setCategory(category);
@@ -60,10 +66,9 @@ class PetControllerTest extends AbstractDatabaseTest {
 
     @Test
     void shouldListPetsByStatus() {
-        UUID categoryId = pickOneFromList(controller.listCategories()).getId();
-        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("Available").status(AVAILABLE));
-        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("Pending").status(PENDING));
-        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("Sold").status(SOLD));
+        controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("Available").status(AVAILABLE));
+        controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("Pending").status(PENDING));
+        controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("Sold").status(SOLD));
         
         assertThat(controller.findPetsByStatus(Optional.of(List.of(AVAILABLE.getValue(), PENDING.getValue()))))
                 .extracting(PetDto::getName)
@@ -73,9 +78,8 @@ class PetControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldDeletePet() {
-        UUID categoryId = pickOneFromList(controller.listCategories()).getId();
-        UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("To be deleted"));
-        controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("To be retained"));
+        UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("To be deleted"));
+        controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("To be retained"));
         
         controller.deletePet(petId);
         assertThat(controller.findPetsByStatus(Optional.empty()))
@@ -110,14 +114,23 @@ class PetControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldUpdatePetWithForm() {
-        UUID categoryId = pickOneFromList(controller.listCategories()).getId();
-        UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(categoryId)).name("To be updated"));
+        UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("To be updated"));
         
         controller.updatePetWithForm(petId, Optional.of("New Name"), Optional.empty());
         assertThat(controller.getPetById(petId).getName()).isEqualTo("New Name");
 
         controller.updatePetWithForm(petId, Optional.empty(), Optional.of(PENDING.getValue()));
         assertThat(controller.getPetById(petId).getStatus()).isEqualTo(PENDING);
+    }
+    
+    @Test
+    void uploadImage() throws IOException {
+        UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("To be updated"));
+        byte[] redDot = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==");
+        UUID fileId = controller.uploadFile(petId, new ByteArrayInputStream(redDot), "reddot.png");
+        assertThat(controller.getPetById(petId).getPhotoUrls())
+                .contains("/pet/images/" + fileId);
+        assertThat(controller.getImage(fileId)).isEqualTo(redDot);
     }
     
 

@@ -1,18 +1,19 @@
 package com.soprasteria.workshop.openapi.domain;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PetEntity {
     private final Pet pet;
     private final Category category;
     private final List<String> tags;
-    private final List<String> urls;
+    private final List<UUID> images;
 
-    public PetEntity(Pet pet, Category category, List<String> tags, List<String> urls) {
+    public PetEntity(Pet pet, Category category, List<String> tags, List<UUID> images) {
         this.pet = pet;
         this.category = category;
         this.tags = tags;
-        this.urls = urls;
+        this.images = images;
     }
 
     public Pet getPet() {
@@ -23,8 +24,8 @@ public class PetEntity {
         return tags;
     }
 
-    public List<String> getUrls() {
-        return urls;
+    public List<UUID> getImages() {
+        return images;
     }
 
     public Category getCategory() {

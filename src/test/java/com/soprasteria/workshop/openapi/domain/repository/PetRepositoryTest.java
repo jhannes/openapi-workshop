@@ -6,6 +6,8 @@ import com.soprasteria.workshop.openapi.domain.PetEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,13 +60,14 @@ class PetRepositoryTest extends AbstractDatabaseTest {
         Pet pet = sampleData.samplePet(category);
         repository.save(pet);
         repository.saveTags(pet, List.of("tag1", "tag2"));
-        repository.saveUrls(pet, List.of("http://example.com/test.jpg", "data:image/png;base64,iVBORw0KGgoAA"));
-        
+        byte[] redDot = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==");
+        UUID imageId = repository.saveImage(pet, "reddot.png", new ByteArrayInputStream(redDot));
+
         PetEntity entity = repository.retrieveEntity(pet.getId());
         assertThat(entity.getPet()).usingRecursiveComparison().isEqualTo(pet);
         assertThat(entity.getCategory()).usingRecursiveComparison().isEqualTo(category);
         assertThat(entity.getTags()).containsExactly("tag1", "tag2");
-        assertThat(entity.getUrls()).containsExactly("http://example.com/test.jpg", "data:image/png;base64,iVBORw0KGgoAA");
+        assertThat(entity.getImages()).containsExactly(imageId);
     }
 
 }
