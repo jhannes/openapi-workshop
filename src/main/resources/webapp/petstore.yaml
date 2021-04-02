@@ -354,6 +354,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '400':
           description: Invalid ID supplied
@@ -607,6 +608,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         petId:
           type: string
           format: uuid
@@ -625,3 +627,6 @@ components:
             - delivered
         complete:
           type: boolean
+      required: 
+        - petId
+        - quantity

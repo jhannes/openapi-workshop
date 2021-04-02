@@ -7,7 +7,9 @@ import java.util.UUID;
 public interface Repository<T> {
     DatabaseSaveResult.SaveStatus save(T o);
 
-    Query<T> query();
-
     T retrieve(UUID id);
+
+    Query<T> query();
+    
+    void delete(T o);
 }

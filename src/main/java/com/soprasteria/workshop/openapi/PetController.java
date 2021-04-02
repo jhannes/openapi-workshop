@@ -70,7 +70,7 @@ public class PetController {
      */
     @DELETE("/pet/{petId}")
     public void deletePet(@PathParam("petId") UUID petId) {
-        petRepository.delete(petId);
+        petRepository.delete(petRepository.retrieve(petId));
     }
 
     /**

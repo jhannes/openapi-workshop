@@ -13,6 +13,7 @@ import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class StoreController {
@@ -33,7 +34,7 @@ public class StoreController {
     @ContentLocationHeader("/store/order/{orderId}")
     public UUID placeOrder(@JsonBody OrderDto orderDto) {
         Order order = new Order();
-        order.setComplete(orderDto.getComplete());
+        order.setComplete(Optional.ofNullable(orderDto.getComplete()).orElse(false));
         order.setPetId(orderDto.getPetId());
         order.setQuantity(orderDto.getQuantity());
         order.setShipDate(orderDto.getShipDate());
@@ -66,8 +67,9 @@ public class StoreController {
      * @param orderId ID of the order that needs to be deleted (required)
      */
     @DELETE("/store/order/{orderId}")
-    public void deleteOrder(@PathParam("orderId") String orderId) {
-
+    public void deleteOrder(@PathParam("orderId") UUID orderId) {
+        Order order = repository.retrieve(orderId);
+        repository.delete(order);
     }
 
     /**
@@ -84,6 +86,9 @@ public class StoreController {
     }
 
     private OrderStatus fromDto(OrderDto.StatusEnum status) {
+        if (status == null) {
+            return OrderStatus.PLACED;
+        }
         switch (status) {
             case PLACED: return OrderStatus.PLACED;
             case APPROVED: return OrderStatus.APPROVED;

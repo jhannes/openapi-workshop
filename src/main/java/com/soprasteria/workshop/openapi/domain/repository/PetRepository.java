@@ -61,8 +61,9 @@ public class PetRepository implements Repository<Pet> {
                 .orElseThrow(() -> new EntityNotFoundException(Pet.class, id));
     }
 
-    public void delete(UUID petId) {
-        table.query().where("id", petId).executeDelete();
+    @Override
+    public void delete(Pet pet) {
+        table.query().where("id", pet.getId()).executeDelete();
     }
 
     @Override

@@ -52,4 +52,9 @@ public class OrderRepository implements Repository<Order> {
         order.setOrderStatus(row.getEnum(OrderStatus.class,"order_status"));
         return order;
     }
+    
+    @Override
+    public void delete(Order order) {
+        table.where("id", order.getId()).executeDelete();
+    }
 }

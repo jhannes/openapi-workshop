@@ -36,8 +36,13 @@ public class CategoryRepository implements Repository<Category> {
 
     @Override
     public Category retrieve(UUID id) {
-        return table.query().where("id", id).singleObject(CategoryRepository::toCategory)
+        return table.where("id", id).singleObject(CategoryRepository::toCategory)
                 .orElseThrow(() -> new EntityNotFoundException(Category.class, id));
+    }
+
+    @Override
+    public void delete(Category o) {
+        table.where("id", o.getId()).executeDelete();
     }
 
     static Category toCategory(DatabaseRow row) throws SQLException {
