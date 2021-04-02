@@ -22,6 +22,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.fluentjdbc.DatabaseStatement.parameterString;
+
 @SuppressWarnings("ALL")
 public class PetRepository implements Repository<Pet> {
 
@@ -155,6 +157,14 @@ public class PetRepository implements Repository<Pet> {
 
         private void status(Stream<PetStatus> statuses) {
             query.whereIn("status", statuses.collect(Collectors.toList()));
+        }
+
+        public PetQuery tags(List<String> tags) {
+            query.whereExpressionWithMultipleParameters(
+                    "p.id in (select pet_id from pets_tags where tag in (" + parameterString(tags.size()) + "))",
+                    tags
+            );
+            return this;
         }
 
         public Stream<PetEntity> streamEntities() {

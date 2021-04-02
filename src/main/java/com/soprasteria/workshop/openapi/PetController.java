@@ -98,9 +98,11 @@ public class PetController {
      */
     @GET("/pet/findByTags")
     @JsonBody
-    public List<PetDto> findPetsByTags(@RequestParam("tags") Optional<List<String>> tags) {
-        // TODO
-        return null;
+    public Stream<PetDto> findPetsByTags(@RequestParam("tags") List<String> tags) {
+        return petRepository.query()
+                .tags(tags)
+                .streamEntities()
+                .map(this::toDto);
     }
 
     /**

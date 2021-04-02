@@ -133,6 +133,19 @@ class PetControllerTest extends AbstractDatabaseTest {
         assertThat(controller.getImage(fileId)).isEqualTo(redDot);
     }
     
+    @Test
+    void shouldFindPetsByTags() {
+        UUID pet1Id = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("A").tags(List.of("tag1", "tag2")));
+        UUID pet2Id = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("B").tags(List.of("tag2", "tag3")));
+        
+        assertThat(controller.findPetsByTags(List.of("tag1"))).extracting(PetDto::getId)
+                .contains(pet1Id).doesNotContain(pet2Id);
+        assertThat(controller.findPetsByTags(List.of("tag2"))).extracting(PetDto::getId)
+                .contains(pet1Id, pet2Id);
+        assertThat(controller.findPetsByTags(List.of("tag1", "tag3"))).extracting(PetDto::getId)
+                .contains(pet1Id, pet2Id);
+    }
+    
 
     private <T> T pickOneFromList(Stream<T> alternatives) {
         return pickOneFromList(alternatives.collect(Collectors.toList()));
