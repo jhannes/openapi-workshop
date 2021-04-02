@@ -48,11 +48,31 @@ public class SampleData {
 
     public User sampleUser() {
         User user = new User();
-        user.setUsername("user" + index++);
-        user.setFirstName(pickOne("Julie", "Anders", "Johannes"));
-        user.setLastName(pickOne("Juleson", "Anderson", "Jameson"));
-        user.setEmail(user.getFirstName() + (index++) + "@" + user.getLastName() + ".example.com");
-        user.setPhone("5555" + random.nextInt(999) + 1000);
+        user.setUsername(randomUsername());
+        user.setFirstName(randomFirstName());
+        user.setLastName(randomLastName());
+        user.setEmail(randomEmail());
+        user.setPhone(randomPhoneNumber());
         return user;
+    }
+
+    public String randomPhoneNumber() {
+        return "5555" + random.nextInt(999) + 1000;
+    }
+
+    public String randomEmail() {
+        return randomFirstName() + (index++) + "@" + randomLastName() + ".example.com";
+    }
+
+    public String randomUsername() {
+        return "user" + index++;
+    }
+
+    private String randomLastName() {
+        return pickOne("Juleson", "Anderson", "Jameson");
+    }
+
+    public String randomFirstName() {
+        return pickOne("Julie", "Anders", "Johannes");
     }
 }

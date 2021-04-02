@@ -7,18 +7,21 @@ import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFound
 import org.actioncontroller.ContentLocationHeader;
 import org.actioncontroller.DELETE;
 import org.actioncontroller.GET;
+import org.actioncontroller.HttpUnauthorizedException;
 import org.actioncontroller.POST;
 import org.actioncontroller.PUT;
 import org.actioncontroller.PathParam;
 import org.actioncontroller.RequestParam;
+import org.actioncontroller.SessionParameter;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class UserController {
-    
+
     private final UserRepository repository;
 
     public UserController(DbContext dbContext) {
@@ -80,6 +83,20 @@ public class UserController {
                 .map(this::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("User", username));
     }
+    
+    /**
+     * Get user by user name
+     *
+     * @param username The name that needs to be fetched. Use user1 for testing.  (required)
+     * @return UserDto
+     */
+    @GET("/user/current")
+    @JsonBody
+    public UserDto getCurrentUser(@SessionParameter(value = "username") String username) {
+        return repository.query().username(username).single()
+                .map(this::toDto)
+                .orElseThrow(HttpUnauthorizedException::new);
+    }
 
     private UserDto toDto(User user) {
         return new UserDto()
@@ -95,23 +112,25 @@ public class UserController {
      *
      * @param username The user name for login (optional)
      * @param password The password for login in clear text (optional)
-     * @return String
      */
     @GET("/user/login")
     @JsonBody
-    public String loginUser(
-            @RequestParam("username") Optional<String> username,
-            @RequestParam("password") Optional<String> password
+    public void loginUser(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            @SessionParameter(value = "username", invalidate = true) Consumer<String> setUserSession
     ) {
-        return null;
+        setUserSession.accept(username);
     }
 
     /**
      * Logs out current logged in user session
      */
     @GET("/user/logout")
-    public void logoutUser() {
-
+    public void logoutUser(
+            @SessionParameter(value = "username", invalidate = true) Consumer<String> setUserSession
+    ) {
+        setUserSession.accept(null);
     }
 
     /**
