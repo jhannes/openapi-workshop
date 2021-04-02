@@ -376,25 +376,13 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
         description: Created user object
-  /user/createWithArray:
-    post:
-      tags:
-        - user
-      summary: Creates list of users with given input array
-      description: ''
-      operationId: createUsersWithArrayInput
-      responses:
-        default:
-          description: successful operation
-      requestBody:
-        $ref: '#/components/requestBodies/UserArray'
   /user/createWithList:
     post:
       tags:
         - user
       summary: Creates list of users with given input array
       description: ''
-      operationId: createUsersWithListInput
+      operationId: createUsersWithList
       responses:
         default:
           description: successful operation
@@ -541,10 +529,6 @@ components:
   schemas:
     User:
       properties:
-        id:
-          type: integer
-          readOnly: true
-          format: int64
         username:
           type: string
         firstName:

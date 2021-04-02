@@ -23,4 +23,26 @@ class UserControllerTest extends AbstractDatabaseTest {
                 .isEqualTo(userDto);
     }
     
+    @Test
+    void shouldUpdateUser() {
+        UserDto userDto = new UserDto()
+                .username("user-two").email("test2@example.com")
+                .firstName("First").lastName("Last")
+                .phone("5551234");
+        controller.createUser(userDto);
+        controller.updateUser(userDto.getUsername(), new UserDto()
+                .username("ignored-username-change")
+                .firstName("Newfirst").lastName("Newlast")
+                .phone("5559876")
+        );
+        
+        assertThat(controller.getUserByName("user-two"))
+                .usingRecursiveComparison()
+                .isEqualTo(new UserDto()
+                        .username("user-two")
+                        .email("test2@example.com")
+                        .firstName("Newfirst").lastName("Newlast")
+                        .phone("5559876"));
+    }
+    
 }

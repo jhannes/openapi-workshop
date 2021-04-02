@@ -49,18 +49,6 @@ public class UserController {
      *
      * @param userDto List of user object (optional
      */
-    @POST("/user/createWithArray")
-    public void createUsersWithArrayInput(
-            @JsonBody List<UserDto> userDto
-    ) {
-
-    }
-
-    /**
-     * Creates list of users with given input array
-     *
-     * @param userDto List of user object (optional
-     */
     @POST("/user/createWithList")
     public void createUsersWithListInput(@JsonBody List<UserDto> userDto) {
 
@@ -73,9 +61,7 @@ public class UserController {
      * @param username The name that needs to be deleted (required)
      */
     @DELETE("/user/{username}")
-    public void deleteUser(
-            @PathParam("username") String username
-    ) {
+    public void deleteUser(@PathParam("username") String username) {
 
     }
 
@@ -124,8 +110,7 @@ public class UserController {
      * Logs out current logged in user session
      */
     @GET("/user/logout")
-    public void logoutUser(
-    ) {
+    public void logoutUser() {
 
     }
 
@@ -141,6 +126,11 @@ public class UserController {
             @PathParam("username") String username,
             @JsonBody UserDto userDto
     ) {
-
+        User user = repository.query().username(username).single()
+                .orElseThrow(() -> new EntityNotFoundException("User", username));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPhone(userDto.getPhone());
+        repository.save(user);
     }
 }
