@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class StoreControllerTest extends AbstractDatabaseTest {
 
-    private final CategoryRepository categoryRepository = new CategoryRepository(context);
-    private final PetRepository petRepository = new PetRepository(context);
-    private final StoreController controller = new StoreController(context);
+    private final CategoryRepository categoryRepository = new CategoryRepository(dbContext);
+    private final PetRepository petRepository = new PetRepository(dbContext);
+    private final StoreController controller = new StoreController(dbContext);
     
     @Test
     void shouldPlaceOrder() {

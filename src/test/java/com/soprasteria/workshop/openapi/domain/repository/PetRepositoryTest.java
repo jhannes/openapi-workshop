@@ -17,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PetRepositoryTest extends AbstractDatabaseTest {
 
-    private final PetRepository repository = new PetRepository(context);
+    private final PetRepository repository = new PetRepository(dbContext);
     public Category category;
 
     @BeforeEach
     public void saveCategory() {
         this.category = sampleData.sampleCategory();
-        new CategoryRepository(context).save(category);
+        new CategoryRepository(dbContext).save(category);
     }
     
     @Test

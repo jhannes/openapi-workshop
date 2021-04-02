@@ -10,13 +10,13 @@ import javax.sql.DataSource;
 
 public class AbstractDatabaseTest {
     protected final SampleData sampleData = new SampleData();
-    protected final DbContext context = new DbContext();
+    protected final DbContext dbContext = new DbContext();
     private final DataSource dataSource = TestDataSource.create();
     private DbContextConnection contextConnection;
 
     @BeforeEach
     public void startContext() {
-        contextConnection = context.startConnection(dataSource);
+        contextConnection = dbContext.startConnection(dataSource);
     }
 
     @AfterEach

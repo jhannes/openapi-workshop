@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CategoryRepositoryTest extends AbstractDatabaseTest {
 
-    private final CategoryRepository repository = new CategoryRepository(context);
+    private final CategoryRepository repository = new CategoryRepository(dbContext);
     
     @Test
     void shouldListSavedEntities() {

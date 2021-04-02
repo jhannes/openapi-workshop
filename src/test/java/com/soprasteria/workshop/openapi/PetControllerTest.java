@@ -28,12 +28,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PetControllerTest extends AbstractDatabaseTest {
 
-    private final PetController controller = new PetController(context);
+    private final PetController controller = new PetController(dbContext);
     public UUID sampleCategoriId;
 
     @BeforeEach
     public void insertCategories() {
-        CategoryRepository repository = new CategoryRepository(context);
+        CategoryRepository repository = new CategoryRepository(dbContext);
         for (String categoryName : CATEGORIES) {
             repository.save(new Category(categoryName));
         }

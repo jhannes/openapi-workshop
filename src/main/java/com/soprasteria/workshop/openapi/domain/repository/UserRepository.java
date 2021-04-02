@@ -4,6 +4,7 @@ import com.soprasteria.workshop.openapi.domain.User;
 import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.infrastructure.repository.Query;
 import com.soprasteria.workshop.openapi.infrastructure.repository.Repository;
+import org.fluentjdbc.DatabaseResult;
 import org.fluentjdbc.DatabaseRow;
 import org.fluentjdbc.DatabaseSaveResult;
 import org.fluentjdbc.DbContext;
@@ -11,6 +12,7 @@ import org.fluentjdbc.DbContextSelectBuilder;
 import org.fluentjdbc.DbContextTable;
 
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -43,7 +45,7 @@ public class UserRepository implements Repository<User> {
     }
 
     @Override
-    public Query<User> query() {
+    public UserQuery query() {
         return new UserQuery(table.query());
     }
 
@@ -63,7 +65,7 @@ public class UserRepository implements Repository<User> {
         return user;
     }
 
-    private class UserQuery implements Query<User> {
+    public class UserQuery implements Query<User> {
         private final DbContextSelectBuilder query;
 
         public UserQuery(DbContextSelectBuilder query) {
@@ -73,6 +75,15 @@ public class UserRepository implements Repository<User> {
         @Override
         public Stream<User> stream() {
             return query.stream(UserRepository.this::toUser);
+        }
+
+        public UserQuery username(String username) {
+            query.where("username", username);
+            return this;
+        }
+
+        public Optional<User> single() {
+            return query.singleObject(UserRepository.this::toUser);
         }
     }
 }

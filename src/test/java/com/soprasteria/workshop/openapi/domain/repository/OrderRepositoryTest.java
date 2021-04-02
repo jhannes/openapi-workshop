@@ -14,9 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderRepositoryTest extends AbstractDatabaseTest {
 
-    private final OrderRepository repository = new OrderRepository(context);
-    private final PetRepository petRepository = new PetRepository(context);
-    private final CategoryRepository categoryRepository = new CategoryRepository(context);
+    private final OrderRepository repository = new OrderRepository(dbContext);
+    private final PetRepository petRepository = new PetRepository(dbContext);
+    private final CategoryRepository categoryRepository = new CategoryRepository(dbContext);
 
     @Test
     void shouldRetrievePetProperties() {

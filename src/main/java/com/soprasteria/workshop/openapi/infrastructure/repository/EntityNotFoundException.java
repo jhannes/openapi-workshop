@@ -8,6 +8,10 @@ public class EntityNotFoundException extends RuntimeException {
     }
 
     public EntityNotFoundException(String entityType, UUID id) {
+        this(entityType, id.toString());
+    }
+
+    public EntityNotFoundException(String entityType, String id) {
         super("Not found " + entityType + " with id " + id);
     }
 }

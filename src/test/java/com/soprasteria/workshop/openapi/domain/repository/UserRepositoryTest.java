@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserRepositoryTest extends AbstractDatabaseTest {
     
-    private final UserRepository repository = new UserRepository(context);
+    private final UserRepository repository = new UserRepository(dbContext);
     
     @Test
     void shouldRetrieveSavedUsers() {

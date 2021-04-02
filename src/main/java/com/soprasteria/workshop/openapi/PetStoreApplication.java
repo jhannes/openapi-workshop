@@ -23,13 +23,14 @@ public class PetStoreApplication implements ServletContextListener {
     
     private final PetController petController;
     private final StoreController storeController;
-    private final UserController userController = new UserController();
+    private final UserController userController;
     public PetApiFilter filter;
 
     public PetStoreApplication(DbContext dbContext) {
         petController = new PetController(dbContext);
         filter = new PetApiFilter(dbContext);
         storeController = new StoreController(dbContext);
+        userController = new UserController(dbContext);
     }
 
     @Override

@@ -1,6 +1,10 @@
 package com.soprasteria.workshop.openapi.controllers;
 
+import com.soprasteria.workshop.openapi.domain.User;
+import com.soprasteria.workshop.openapi.domain.repository.UserRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
+import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
+import org.actioncontroller.ContentLocationHeader;
 import org.actioncontroller.DELETE;
 import org.actioncontroller.GET;
 import org.actioncontroller.POST;
@@ -8,11 +12,19 @@ import org.actioncontroller.PUT;
 import org.actioncontroller.PathParam;
 import org.actioncontroller.RequestParam;
 import org.actioncontroller.json.JsonBody;
+import org.fluentjdbc.DbContext;
 
 import java.util.List;
 import java.util.Optional;
 
 public class UserController {
+    
+    private final UserRepository repository;
+
+    public UserController(DbContext dbContext) {
+        repository = new UserRepository(dbContext);
+    }
+
     /**
      * Create user
      * This can only be done by the logged in user.
@@ -20,10 +32,16 @@ public class UserController {
      * @param userDto Created user object (optional)
      */
     @POST("/user")
-    public void createUser(
-            @JsonBody UserDto userDto
-    ) {
-
+    @ContentLocationHeader("/user/{username}")
+    public String createUser(@JsonBody UserDto userDto) {
+        User o = new User();
+        o.setUsername(userDto.getUsername());
+        o.setEmail(userDto.getEmail());
+        o.setFirstName(userDto.getFirstName());
+        o.setLastName(userDto.getLastName());
+        o.setPhone(userDto.getPhone());
+        repository.save(o);
+        return o.getUsername();
     }
 
     /**
@@ -44,9 +62,7 @@ public class UserController {
      * @param userDto List of user object (optional
      */
     @POST("/user/createWithList")
-    public void createUsersWithListInput(
-            @JsonBody List<UserDto> userDto
-    ) {
+    public void createUsersWithListInput(@JsonBody List<UserDto> userDto) {
 
     }
 
@@ -74,7 +90,18 @@ public class UserController {
     public UserDto getUserByName(
             @PathParam("username") String username
     ) {
-        return null;
+        return repository.query().username(username).single()
+                .map(this::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("User", username));
+    }
+
+    private UserDto toDto(User user) {
+        return new UserDto()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phone(user.getPhone());
     }
 
     /**
