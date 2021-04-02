@@ -74,11 +74,6 @@ paths:
                     color: Black
                     gender: Female
                     breed: Mixed
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Pet'
         '400':
           description: Invalid status value
       security:
@@ -111,11 +106,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Pet'
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Pet'
         '400':
           description: Invalid tag value
       security:
@@ -142,9 +132,6 @@ paths:
           description: successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Pet'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/Pet'
         '400':
@@ -304,12 +291,6 @@ paths:
                 additionalProperties:
                   type: integer
                   format: int32
-            application/xml:
-              schema:
-                type: object
-                additionalProperties:
-                  type: integer
-                  format: int32
       security:
         - api_key: []
   /store/order:
@@ -322,13 +303,12 @@ paths:
       responses:
         '200':
           description: successful operation
-          content:
-            application/json:
+          headers:
+            Content-location:
+              description: the url for more information about the new pet
               schema:
-                $ref: '#/components/schemas/Order'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Order'
+                type: string
+                format: uri
         '400':
           description: Invalid Order
       requestBody:
@@ -342,7 +322,6 @@ paths:
       tags:
         - store
       summary: Find purchase order by ID
-      description: For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions
       operationId: getOrderById
       parameters:
         - name: orderId
@@ -351,14 +330,12 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/Order'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/Order'
         '400':
@@ -369,7 +346,6 @@ paths:
       tags:
         - store
       summary: Delete purchase order by ID
-      description: For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors
       operationId: deleteOrder
       parameters:
         - name: orderId
@@ -450,9 +426,6 @@ paths:
             application/json:
               schema:
                 type: string
-            application/xml:
-              schema:
-                type: string
         '400':
           description: Invalid username/password supplied
   /user/logout:
@@ -484,9 +457,6 @@ paths:
           description: successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
@@ -550,9 +520,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Pet'
-        application/xml:
-          schema:
-            $ref: '#/components/schemas/Pet'
       description: Pet object that needs to be added to the store
   securitySchemes:
     api_key:
@@ -597,8 +564,6 @@ components:
         - firstName
         - lastName
         - email
-      xml:
-        name: User
     Category:
       properties:
         id:
@@ -606,8 +571,6 @@ components:
           format: uuid
         name:
           type: string
-      xml:
-        name: Category
     Pet:
       required:
         - name
@@ -626,9 +589,6 @@ components:
         photoUrls:
           type: array
           readOnly: true
-          xml:
-            name: photoUrl
-            wrapped: true
           items:
             type: string
         tags:
@@ -642,8 +602,6 @@ components:
             - available
             - pending
             - sold
-      xml:
-        name: Pet
     Order:
       properties:
         id:
@@ -667,5 +625,3 @@ components:
             - delivered
         complete:
           type: boolean
-      xml:
-        name: Order

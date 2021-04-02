@@ -19,13 +19,14 @@ import java.util.List;
 public class PetStoreApplication implements ServletContextListener {
     
     private final PetController petController;
-    private final StoreController storeController = new StoreController();
+    private final StoreController storeController;
     private final UserController userController = new UserController();
     public PetApiFilter filter;
 
     public PetStoreApplication(DbContext dbContext) {
         petController = new PetController(dbContext);
         filter = new PetApiFilter(dbContext);
+        storeController = new StoreController(dbContext);
     }
 
     @Override
