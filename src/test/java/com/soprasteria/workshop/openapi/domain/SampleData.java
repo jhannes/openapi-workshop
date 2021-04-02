@@ -43,4 +43,14 @@ public class SampleData {
     public static <T> T pickOne(T... alternatives) {
         return alternatives[random.nextInt(alternatives.length)];
     }
+
+    private int index = 1;
+
+    public User sampleUser() {
+        User user = new User();
+        user.setUsername("user" + index++);
+        user.setFirstName(pickOne("Julie", "Anders", "Johannes"));
+        user.setLastName(pickOne("Juleson", "Anderson", "Jameson"));
+        return user;
+    }
 }
