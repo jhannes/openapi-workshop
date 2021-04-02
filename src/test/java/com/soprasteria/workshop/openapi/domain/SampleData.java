@@ -1,6 +1,9 @@
 package com.soprasteria.workshop.openapi.domain;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SampleData {
 
@@ -27,6 +30,14 @@ public class SampleData {
     }
 
     private static final Random random = new Random();
+
+    public  <T> T pickOneFromList(Stream<T> alternatives) {
+        return pickOneFromList(alternatives.collect(Collectors.toList()));
+    }
+
+    public   <T> T pickOneFromList(List<T> alternatives) {
+        return alternatives.get(random.nextInt(alternatives.size()));
+    }
 
     @SafeVarargs
     public static <T> T pickOne(T... alternatives) {

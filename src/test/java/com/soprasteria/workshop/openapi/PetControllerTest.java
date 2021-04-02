@@ -1,6 +1,7 @@
 package com.soprasteria.workshop.openapi;
 
 import com.soprasteria.workshop.openapi.domain.Category;
+import com.soprasteria.workshop.openapi.domain.SampleData;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
 import com.soprasteria.workshop.openapi.domain.repository.EntityNotFoundException;
@@ -10,16 +11,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.soprasteria.workshop.openapi.domain.SampleData.CATEGORIES;
 import static com.soprasteria.workshop.openapi.generated.petstore.PetDto.StatusEnum.AVAILABLE;
@@ -29,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PetControllerTest extends AbstractDatabaseTest {
-    private static final Random random = new Random();
 
     private final PetController controller = new PetController(context);
     public UUID sampleCategoriId;
@@ -40,16 +37,16 @@ class PetControllerTest extends AbstractDatabaseTest {
         for (String categoryName : CATEGORIES) {
             repository.save(new Category(categoryName));
         }
-        sampleCategoriId = pickOneFromList(controller.listCategories()).getId();
+        sampleCategoriId = sampleData.pickOneFromList(controller.listCategories()).getId();
     }
     
     @Test
     void shouldRetrieveSavedPet() {
-        CategoryDto category = pickOneFromList(controller.listCategories());
+        CategoryDto category = sampleData.pickOneFromList(controller.listCategories());
         PetDto petDto = new PetDto()
                 .category(new CategoryDto().id(category.getId()))
-                .name(randomName())
-                .status(pickOne(PetDto.StatusEnum.values()))
+                .name(sampleData.randomName())
+                .status(SampleData.pickOne(PetDto.StatusEnum.values()))
                 .tags(List.of("tag1", "tag2"));
         UUID petId = controller.addPet(petDto);
         petDto.setId(petId);
@@ -60,8 +57,7 @@ class PetControllerTest extends AbstractDatabaseTest {
     
     @Test
     void throwsOnNotFound() {
-        assertThatThrownBy(() -> controller.getPetById(UUID.randomUUID()))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> controller.getPetById(UUID.randomUUID())).isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -145,23 +141,4 @@ class PetControllerTest extends AbstractDatabaseTest {
         assertThat(controller.findPetsByTags(List.of("tag1", "tag3"))).extracting(PetDto::getId)
                 .contains(pet1Id, pet2Id);
     }
-    
-
-    private <T> T pickOneFromList(Stream<T> alternatives) {
-        return pickOneFromList(alternatives.collect(Collectors.toList()));
-    }
-
-    private <T> T pickOneFromList(List<T> alternatives) {
-        return alternatives.get(random.nextInt(alternatives.size()));
-    }
-
-    private String randomName() {
-        return pickOne("Bella", "Luna", "Charlie", "Lucy", "Cooper", "Max", "Bailey", "Daisy") + " " + random.nextInt(100);
-    }
-
-    @SafeVarargs
-    private static <T> T pickOne(T... alternatives) {
-        return alternatives[random.nextInt(alternatives.length)];
-    }
-
 }
