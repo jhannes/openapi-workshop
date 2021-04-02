@@ -31,11 +31,11 @@ public class SampleData {
 
     private static final Random random = new Random();
 
-    public  <T> T pickOneFromList(Stream<T> alternatives) {
+    public <T> T pickOneFromList(Stream<T> alternatives) {
         return pickOneFromList(alternatives.collect(Collectors.toList()));
     }
 
-    public   <T> T pickOneFromList(List<T> alternatives) {
+    public <T> T pickOneFromList(List<T> alternatives) {
         return alternatives.get(random.nextInt(alternatives.size()));
     }
 
@@ -44,13 +44,15 @@ public class SampleData {
         return alternatives[random.nextInt(alternatives.length)];
     }
 
-    private int index = 1;
+    private static int index = 1;
 
     public User sampleUser() {
         User user = new User();
         user.setUsername("user" + index++);
         user.setFirstName(pickOne("Julie", "Anders", "Johannes"));
         user.setLastName(pickOne("Juleson", "Anderson", "Jameson"));
+        user.setEmail(user.getFirstName() + (index++) + "@" + user.getLastName() + ".example.com");
+        user.setPhone("5555" + random.nextInt(999) + 1000);
         return user;
     }
 }

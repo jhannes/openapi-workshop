@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class UserRepository implements Repository<User> {
 
-    public DbContextTable table;
+    private final DbContextTable table;
 
     public UserRepository(DbContext dbContext) {
         table = dbContext.tableWithTimestamps("users");
@@ -25,9 +25,11 @@ public class UserRepository implements Repository<User> {
     @Override
     public DatabaseSaveResult.SaveStatus save(User o) {
         DatabaseSaveResult<UUID> result = table.newSaveBuilderWithUUID("id", o.getId())
-                .setField("username", o.getUsername())
+                .uniqueKey("username", o.getUsername())
+                .setField("email", o.getEmail())
                 .setField("first_name", o.getFirstName())
                 .setField("last_name", o.getLastName())
+                .setField("phone", o.getPhone())
                 .execute();
         o.setId(result.getId());
         return result.getSaveStatus();
@@ -54,8 +56,10 @@ public class UserRepository implements Repository<User> {
         User user = new User();
         user.setId(row.getUUID("id"));
         user.setUsername(row.getString("username"));
+        user.setEmail(row.getString("email"));
         user.setFirstName(row.getString("first_name"));
         user.setLastName(row.getString("last_name"));
+        user.setPhone(row.getString("phone"));
         return user;
     }
 

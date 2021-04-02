@@ -21,5 +21,15 @@ public class UserRepositoryTest extends AbstractDatabaseTest {
                 .contains(user1.getId(), user2.getId());
     }
     
+    @Test
+    void shouldRetrieveAllFields() {
+        User user = sampleData.sampleUser();
+        repository.save(user);
+        assertThat(repository.retrieve(user.getId()))
+                .hasNoNullFieldsOrProperties()
+                .usingRecursiveComparison()
+                .isEqualTo(user);
+    }
+    
     
 }
