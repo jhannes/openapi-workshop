@@ -1,6 +1,6 @@
 package com.soprasteria.workshop.openapi;
 
-import com.soprasteria.workshop.openapi.domain.repository.EntityNotFoundException;
+import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

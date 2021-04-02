@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi.domain.repository;
+package com.soprasteria.workshop.openapi.infrastructure.repository;
 
 import org.fluentjdbc.DatabaseSaveResult;
 

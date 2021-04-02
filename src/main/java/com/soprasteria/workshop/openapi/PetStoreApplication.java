@@ -1,7 +1,10 @@
 package com.soprasteria.workshop.openapi;
 
-import com.soprasteria.workshop.openapi.infrastructure.ContentServlet;
-import com.soprasteria.workshop.openapi.infrastructure.WebJarServlet;
+import com.soprasteria.workshop.openapi.controllers.PetController;
+import com.soprasteria.workshop.openapi.controllers.StoreController;
+import com.soprasteria.workshop.openapi.controllers.UserController;
+import com.soprasteria.workshop.openapi.infrastructure.servlet.ContentServlet;
+import com.soprasteria.workshop.openapi.infrastructure.servlet.WebJarServlet;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletContext;

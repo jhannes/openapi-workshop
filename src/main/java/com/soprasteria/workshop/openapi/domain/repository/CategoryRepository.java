@@ -1,6 +1,9 @@
 package com.soprasteria.workshop.openapi.domain.repository;
 
 import com.soprasteria.workshop.openapi.domain.Category;
+import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.openapi.infrastructure.repository.Query;
+import com.soprasteria.workshop.openapi.infrastructure.repository.Repository;
 import org.fluentjdbc.DatabaseRow;
 import org.fluentjdbc.DatabaseSaveResult;
 import org.fluentjdbc.DbContext;

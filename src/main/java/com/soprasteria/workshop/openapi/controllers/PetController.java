@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi;
+package com.soprasteria.workshop.openapi.controllers;
 
 import com.soprasteria.workshop.openapi.domain.Pet;
 import com.soprasteria.workshop.openapi.domain.PetEntity;
@@ -7,7 +7,7 @@ import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
 import com.soprasteria.workshop.openapi.domain.repository.PetRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
-import com.soprasteria.workshop.openapi.infrastructure.Multipart;
+import com.soprasteria.workshop.openapi.infrastructure.servlet.Multipart;
 import org.actioncontroller.ContentBody;
 import org.actioncontroller.ContentLocationHeader;
 import org.actioncontroller.DELETE;

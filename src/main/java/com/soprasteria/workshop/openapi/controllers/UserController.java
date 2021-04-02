@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi;
+package com.soprasteria.workshop.openapi.controllers;
 
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
 import org.actioncontroller.DELETE;

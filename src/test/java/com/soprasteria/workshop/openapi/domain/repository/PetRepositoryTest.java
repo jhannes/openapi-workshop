@@ -3,6 +3,7 @@ package com.soprasteria.workshop.openapi.domain.repository;
 import com.soprasteria.workshop.openapi.domain.Category;
 import com.soprasteria.workshop.openapi.domain.Pet;
 import com.soprasteria.workshop.openapi.domain.PetEntity;
+import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

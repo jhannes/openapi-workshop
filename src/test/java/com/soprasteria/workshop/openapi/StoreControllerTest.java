@@ -1,10 +1,11 @@
 package com.soprasteria.workshop.openapi;
 
+import com.soprasteria.workshop.openapi.controllers.StoreController;
 import com.soprasteria.workshop.openapi.domain.Category;
 import com.soprasteria.workshop.openapi.domain.Pet;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
-import com.soprasteria.workshop.openapi.domain.repository.EntityNotFoundException;
+import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.domain.repository.PetRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.OrderDto;
 import org.junit.jupiter.api.Test;

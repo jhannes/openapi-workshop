@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi.infrastructure;
+package com.soprasteria.workshop.openapi.infrastructure.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Part;

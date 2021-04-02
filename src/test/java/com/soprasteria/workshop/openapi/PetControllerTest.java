@@ -1,10 +1,11 @@
 package com.soprasteria.workshop.openapi;
 
+import com.soprasteria.workshop.openapi.controllers.PetController;
 import com.soprasteria.workshop.openapi.domain.Category;
 import com.soprasteria.workshop.openapi.domain.SampleData;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
-import com.soprasteria.workshop.openapi.domain.repository.EntityNotFoundException;
+import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
