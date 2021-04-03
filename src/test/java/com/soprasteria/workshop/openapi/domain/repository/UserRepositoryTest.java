@@ -24,8 +24,10 @@ public class UserRepositoryTest extends AbstractDatabaseTest {
     @Test
     void shouldRetrieveAllFields() {
         User user = sampleData.sampleUser();
+        user.setPassword("password");
         repository.save(user);
-        assertThat(repository.retrieve(user.getId()))
+        User savedUser = repository.retrieve(user.getId());
+        assertThat(savedUser)
                 .hasNoNullFieldsOrProperties()
                 .usingRecursiveComparison()
                 .isEqualTo(user);

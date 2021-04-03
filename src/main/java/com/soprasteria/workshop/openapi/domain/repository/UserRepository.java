@@ -32,6 +32,7 @@ public class UserRepository implements Repository<User> {
                 .setField("first_name", o.getFirstName())
                 .setField("last_name", o.getLastName())
                 .setField("phone", o.getPhone())
+                .setField("password_hash", o.getPasswordHash())
                 .execute();
         o.setId(result.getId());
         return result.getSaveStatus();
@@ -62,6 +63,7 @@ public class UserRepository implements Repository<User> {
         user.setFirstName(row.getString("first_name"));
         user.setLastName(row.getString("last_name"));
         user.setPhone(row.getString("phone"));
+        user.setPasswordHash(row.getString("password_hash"));
         return user;
     }
 

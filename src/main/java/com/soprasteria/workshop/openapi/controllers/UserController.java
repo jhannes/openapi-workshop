@@ -43,6 +43,7 @@ public class UserController {
         o.setFirstName(userDto.getFirstName());
         o.setLastName(userDto.getLastName());
         o.setPhone(userDto.getPhone());
+        o.setPassword(userDto.getPassword());
         repository.save(o);
         return o.getUsername();
     }
@@ -120,6 +121,11 @@ public class UserController {
             @RequestParam("password") String password,
             @SessionParameter(value = "username", invalidate = true) Consumer<String> setUserSession
     ) {
+        User user = repository.query().username(username).single()
+                .orElseThrow(() -> new EntityNotFoundException("User", username));
+        if (!user.isCorrectPassword(password)) {
+            throw new HttpUnauthorizedException();
+        }
         setUserSession.accept(username);
     }
 

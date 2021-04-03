@@ -46,15 +46,27 @@ class UserControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldLogUserIn() {
-        UserDto user = sampleUserDto();
+        UserDto user = sampleUserDto()
+                .password("correct password");
         controller.createUser(user);
         AtomicReference<String> sessionUser = new AtomicReference<>();
-        controller.loginUser(user.getUsername(), "randompass", sessionUser::set);
+        controller.loginUser(user.getUsername(), "correct password", sessionUser::set);
         assertThat(controller.getCurrentUser(sessionUser.get()))
                 .usingRecursiveComparison()
+                .ignoringFields("password")
                 .isEqualTo(user);
         controller.logoutUser(sessionUser::set);
         assertThatThrownBy(() -> controller.getCurrentUser(sessionUser.get()))
+                .isInstanceOf(HttpUnauthorizedException.class);
+    }
+    
+    @Test
+    void shouldLogRequireCorrectPassword() {
+        UserDto user = sampleUserDto()
+                .password("somepass");
+        controller.createUser(user);
+        AtomicReference<String> sessionUser = new AtomicReference<>();
+        assertThatThrownBy(() -> controller.loginUser(user.getUsername(), "wrongpass", sessionUser::set))
                 .isInstanceOf(HttpUnauthorizedException.class);
     }
 

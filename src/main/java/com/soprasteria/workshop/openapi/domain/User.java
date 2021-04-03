@@ -1,5 +1,7 @@
 package com.soprasteria.workshop.openapi.domain;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.UUID;
 
 public class User {
@@ -9,6 +11,7 @@ public class User {
     private String lastName;
     private String phone;
     private String email;
+    private String passwordHash;
 
     public UUID getId() {
         return id;
@@ -56,5 +59,21 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean isCorrectPassword(String password) {
+        return passwordHash != null && BCrypt.checkpw(password, passwordHash);
+    }
+
+    public void setPassword(String password) {
+        setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt(10)));
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
     }
 }

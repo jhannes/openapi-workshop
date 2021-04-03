@@ -545,10 +545,13 @@ components:
           type: string
         email:
           type: string
+          format: email
         password:
           type: string
+          writeOnly: true
         phone:
           type: string
+          format: phone
         userStatus:
           type: string
           description: User Status
