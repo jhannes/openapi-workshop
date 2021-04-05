@@ -7,13 +7,11 @@ import com.soprasteria.workshop.openapi.infrastructure.repository.Repository;
 import org.fluentjdbc.DatabaseRow;
 import org.fluentjdbc.DatabaseSaveResult;
 import org.fluentjdbc.DbContext;
-import org.fluentjdbc.DbContextSelectBuilder;
 import org.fluentjdbc.DbContextTable;
 import org.fluentjdbc.DbContextTableAlias;
 
 import java.sql.SQLException;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public class CategoryRepository implements Repository<Category> {
 
@@ -33,8 +31,8 @@ public class CategoryRepository implements Repository<Category> {
     }
 
     @Override
-    public CategoryQuery query() {
-        return new CategoryQuery(table.query());
+    public Query<Category> query() {
+        return () -> table.query().stream(CategoryRepository::toCategory);
     }
 
     @Override
@@ -58,16 +56,4 @@ public class CategoryRepository implements Repository<Category> {
         return table.alias(alias);
     }
 
-    public static class CategoryQuery implements Query<Category> {
-        private final DbContextSelectBuilder query;
-
-        public CategoryQuery(DbContextSelectBuilder query) {
-            this.query = query;
-        }
-
-        @Override
-        public Stream<Category> stream() {
-            return query.stream(CategoryRepository::toCategory);
-        }
-    }
 }

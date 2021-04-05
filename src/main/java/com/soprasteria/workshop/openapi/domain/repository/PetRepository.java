@@ -11,6 +11,7 @@ import org.fluentjdbc.DatabaseSaveResult;
 import org.fluentjdbc.DatabaseStatement;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextJoinedSelectBuilder;
+import org.fluentjdbc.DbContextSaveBuilder;
 import org.fluentjdbc.DbContextTable;
 import org.fluentjdbc.DbContextTableAlias;
 import org.fluentjdbc.util.ExceptionUtil;
@@ -94,25 +95,17 @@ public class PetRepository implements Repository<Pet> {
     }
 
     public UUID saveImage(Pet pet, String filename, InputStream fileContent) {
-        UUID id = UUID.randomUUID();
-        String sql = DatabaseStatement.createInsertSql(
-                imagesTable.getTable().getTableName(), List.of("id", "pet_id", "filename", "content")
-        );
-        try (PreparedStatement statement = imagesTable.getConnection().prepareStatement(sql)) {
-            statement.setObject(1, id);
-            statement.setObject(2, pet.getId());
-            statement.setString(3, filename);
-            statement.setBinaryStream(4, fileContent);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw ExceptionUtil.softenCheckedException(e);
-        }
-        return id;
+        DatabaseSaveResult<UUID> result = imagesTable.newSaveBuilderWithUUID("id", null)
+                .setField("pet_id", pet.getId())
+                .setField("filename", filename)
+                .setField("content", fileContent)
+                .execute();
+        return result.getId();
     }
 
     public InputStream readImage(UUID fileId) {
         return imagesTable.where("id", fileId)
-                .singleObject(row -> ((Blob)row.getObject("content")).getBinaryStream())
+                .singleInputStream("content")
                 .orElseThrow(() -> new EntityNotFoundException("File", fileId));
     }
 
@@ -164,7 +157,7 @@ public class PetRepository implements Repository<Pet> {
         }
 
         public PetQuery tags(List<String> tags) {
-            query.whereExpressionWithMultipleParameters(
+            query.whereExpressionWithParameterList(
                     "p.id in (select pet_id from pets_tags where tag in (" + parameterString(tags.size()) + "))",
                     tags
             );

@@ -36,7 +36,7 @@ public class OrderRepository implements Repository<Order> {
 
     @Override
     public Query<Order> query() {
-        return null;
+        return () -> table.query().stream(OrderRepository.this::toOrder);
     }
 
     @Override

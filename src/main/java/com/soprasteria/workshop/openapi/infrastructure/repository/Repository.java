@@ -2,10 +2,11 @@ package com.soprasteria.workshop.openapi.infrastructure.repository;
 
 import org.fluentjdbc.DatabaseSaveResult;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 public interface Repository<T> {
-    DatabaseSaveResult.SaveStatus save(T o);
+    DatabaseSaveResult.SaveStatus save(T o) throws SQLException;
 
     T retrieve(UUID id);
 
