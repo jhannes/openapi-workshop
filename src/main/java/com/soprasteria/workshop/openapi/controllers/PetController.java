@@ -16,11 +16,10 @@ import org.actioncontroller.POST;
 import org.actioncontroller.PUT;
 import org.actioncontroller.PathParam;
 import org.actioncontroller.RequestParam;
+import org.actioncontroller.ServletUrl;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
@@ -82,11 +81,14 @@ public class PetController {
      */
     @GET("/pet/findByStatus")
     @JsonBody
-    public Stream<PetDto> findPetsByStatus(@RequestParam("status") Optional<List<String>> status) {
+    public Stream<PetDto> findPetsByStatus(
+            @RequestParam("status") Optional<List<PetDto.StatusEnum>> status,
+            @ServletUrl String servletUrl
+    ) {
         return petRepository.query()
-                .status(status.map(list -> list.stream().map(PetDto.StatusEnum::fromValue).map(this::fromDto)))
+                .status(status.map(list -> list.stream().map(this::fromDto)))
                 .streamEntities()
-                .map(this::toDto);
+                .map(pet -> toDto(pet, servletUrl));
     }
 
     /**
@@ -98,24 +100,26 @@ public class PetController {
      */
     @GET("/pet/findByTags")
     @JsonBody
-    public Stream<PetDto> findPetsByTags(@RequestParam("tags") List<String> tags) {
+    public Stream<PetDto> findPetsByTags(
+            @RequestParam("tags") List<String> tags,
+            @ServletUrl String servletUrl
+    ) {
         return petRepository.query()
                 .tags(tags)
                 .streamEntities()
-                .map(this::toDto);
+                .map(pet -> toDto(pet, servletUrl));
     }
 
     /**
      * Find pet by ID
-     * Returns a pet when ID &lt; 10.  ID &gt; 10 or nonintegers will simulate API error conditions
      *
      * @param petId ID of pet that needs to be fetched (required)
      * @return PetDto
      */
     @GET("/pet/{petId}")
     @JsonBody
-    public PetDto getPetById(@PathParam("petId") UUID petId) {
-        return toDto(petRepository.retrieveEntity(petId));
+    public PetDto getPetById(@PathParam("petId") UUID petId, @ServletUrl String servletUrl) {
+        return toDto(petRepository.retrieveEntity(petId), servletUrl);
     }
 
     /**
@@ -175,10 +179,8 @@ public class PetController {
 
     @GET("/pet/images/{fileId}")
     @ContentBody(contentType = "image/png")
-    public byte[] getImage(@PathParam("fileId") UUID fileId) throws IOException {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        petRepository.readImage(fileId).transferTo(buffer);
-        return buffer.toByteArray();
+    public InputStream getImage(@PathParam("fileId") UUID fileId) {
+        return petRepository.readImage(fileId);
     }
 
     private Pet fromDto(PetDto petDto) {
@@ -189,14 +191,14 @@ public class PetController {
         return pet;
     }
 
-    private PetDto toDto(PetEntity pet) {
+    private PetDto toDto(PetEntity pet, String servletUrl) {
         return new PetDto()
                 .name(pet.getPet().getName())
                 .id(pet.getPet().getId())
                 .status(toDto(pet.getPet().getStatus()))
                 .category(new CategoryDto().id(pet.getCategory().getId()).name(pet.getCategory().getName()))
                 .tags(pet.getTags())
-                .photoUrls(pet.getImages(), u -> "/pet/images/" + u);
+                .photoUrls(pet.getImages(), u -> servletUrl + "/pet/images/" + u);
     }
 
     private PetStatus fromDto(PetDto.StatusEnum status) {

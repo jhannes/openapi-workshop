@@ -574,6 +574,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         category:
           $ref: '#/components/schemas/Category'
         name:

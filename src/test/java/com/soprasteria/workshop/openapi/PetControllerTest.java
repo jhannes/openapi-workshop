@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,7 @@ class PetControllerTest extends AbstractDatabaseTest {
     private final PetController controller = new PetController(dbContext);
     public UUID sampleCategoriId;
     public ApiSampleData apiSampleData;
+    private static final String servletUrl = "https://petstore.example.com/petstore/api";
 
     @BeforeEach
     public void insertCategories(TestInfo testInfo) {
@@ -51,12 +54,12 @@ class PetControllerTest extends AbstractDatabaseTest {
         petDto.setId(petId);
         petDto.setCategory(category);
 
-        assertThat(controller.getPetById(petId)).usingRecursiveComparison().isEqualTo(petDto);
+        assertThat(controller.getPetById(petId, servletUrl)).usingRecursiveComparison().isEqualTo(petDto);
     }
     
     @Test
     void throwsOnNotFound() {
-        assertThatThrownBy(() -> controller.getPetById(UUID.randomUUID())).isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> controller.getPetById(UUID.randomUUID(), servletUrl)).isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -65,7 +68,7 @@ class PetControllerTest extends AbstractDatabaseTest {
         controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("Pending").status(PENDING));
         controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("Sold").status(SOLD));
         
-        assertThat(controller.findPetsByStatus(Optional.of(List.of(AVAILABLE.getValue(), PENDING.getValue()))))
+        assertThat(controller.findPetsByStatus(Optional.of(List.of(AVAILABLE, PENDING)), servletUrl))
                 .extracting(PetDto::getName)
                 .contains("Available", "Pending")
                 .doesNotContain("Sold");
@@ -77,7 +80,7 @@ class PetControllerTest extends AbstractDatabaseTest {
         controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("To be retained"));
         
         controller.deletePet(petId);
-        assertThat(controller.findPetsByStatus(Optional.empty()))
+        assertThat(controller.findPetsByStatus(Optional.empty(), servletUrl))
                 .extracting(PetDto::getName)
                 .contains("To be retained")
                 .doesNotContain("To be deleted");
@@ -93,7 +96,7 @@ class PetControllerTest extends AbstractDatabaseTest {
         controller.updatePet(petId, updatedPet);
         updatedPet.setCategory(categories.get(1));
         updatedPet.setId(petId);
-        assertThat(controller.getPetById(petId))
+        assertThat(controller.getPetById(petId, servletUrl))
                 .usingRecursiveComparison()
                 .isEqualTo(updatedPet);
     }
@@ -103,10 +106,10 @@ class PetControllerTest extends AbstractDatabaseTest {
         UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("To be updated"));
         
         controller.updatePetWithForm(petId, Optional.of("New Name"), Optional.empty());
-        assertThat(controller.getPetById(petId).getName()).isEqualTo("New Name");
+        assertThat(controller.getPetById(petId, servletUrl).getName()).isEqualTo("New Name");
 
         controller.updatePetWithForm(petId, Optional.empty(), Optional.of(PENDING.getValue()));
-        assertThat(controller.getPetById(petId).getStatus()).isEqualTo(PENDING);
+        assertThat(controller.getPetById(petId, servletUrl).getStatus()).isEqualTo(PENDING);
     }
     
     @Test
@@ -114,9 +117,11 @@ class PetControllerTest extends AbstractDatabaseTest {
         UUID petId = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("To be updated"));
         byte[] redDot = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==");
         UUID fileId = controller.uploadFile(petId, new ByteArrayInputStream(redDot), "reddot.png");
-        assertThat(controller.getPetById(petId).getPhotoUrls())
-                .contains("/pet/images/" + fileId);
-        assertThat(controller.getImage(fileId)).isEqualTo(redDot);
+        assertThat(controller.getPetById(petId, servletUrl).getPhotoUrls())
+                .contains(servletUrl + "pet/images/" + fileId);
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        controller.getImage(fileId).transferTo(buffer);
+        assertThat(buffer.toByteArray()).isEqualTo(redDot);
     }
     
     @Test
@@ -124,11 +129,11 @@ class PetControllerTest extends AbstractDatabaseTest {
         UUID pet1Id = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("A").tags(List.of("tag1", "tag2")));
         UUID pet2Id = controller.addPet(new PetDto().category(new CategoryDto().id(sampleCategoriId)).name("B").tags(List.of("tag2", "tag3")));
         
-        assertThat(controller.findPetsByTags(List.of("tag1"))).extracting(PetDto::getId)
+        assertThat(controller.findPetsByTags(List.of("tag1"), servletUrl)).extracting(PetDto::getId)
                 .contains(pet1Id).doesNotContain(pet2Id);
-        assertThat(controller.findPetsByTags(List.of("tag2"))).extracting(PetDto::getId)
+        assertThat(controller.findPetsByTags(List.of("tag2"), servletUrl)).extracting(PetDto::getId)
                 .contains(pet1Id, pet2Id);
-        assertThat(controller.findPetsByTags(List.of("tag1", "tag3"))).extracting(PetDto::getId)
+        assertThat(controller.findPetsByTags(List.of("tag1", "tag3"), servletUrl)).extracting(PetDto::getId)
                 .contains(pet1Id, pet2Id);
     }
 }
