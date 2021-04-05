@@ -552,9 +552,6 @@ components:
         phone:
           type: string
           format: phone
-        userStatus:
-          type: string
-          description: User Status
       required: 
         - username
         - firstName

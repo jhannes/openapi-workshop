@@ -1,15 +1,16 @@
 package com.soprasteria.workshop.openapi;
 
+import com.soprasteria.workshop.openapi.controllers.ApiSampleData;
 import com.soprasteria.workshop.openapi.controllers.PetController;
 import com.soprasteria.workshop.openapi.domain.Category;
-import com.soprasteria.workshop.openapi.domain.SampleData;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
-import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
+import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,24 +31,22 @@ class PetControllerTest extends AbstractDatabaseTest {
 
     private final PetController controller = new PetController(dbContext);
     public UUID sampleCategoriId;
+    public ApiSampleData apiSampleData;
 
     @BeforeEach
-    public void insertCategories() {
+    public void insertCategories(TestInfo testInfo) {
         CategoryRepository repository = new CategoryRepository(dbContext);
         for (String categoryName : CATEGORIES) {
             repository.save(new Category(categoryName));
         }
         sampleCategoriId = sampleData.pickOneFromList(controller.listCategories()).getId();
+        apiSampleData = new ApiSampleData(testInfo.getTestMethod());
     }
     
     @Test
     void shouldRetrieveSavedPet() {
         CategoryDto category = sampleData.pickOneFromList(controller.listCategories());
-        PetDto petDto = new PetDto()
-                .category(new CategoryDto().id(category.getId()))
-                .name(sampleData.randomName())
-                .status(SampleData.pickOne(PetDto.StatusEnum.values()))
-                .tags(List.of("tag1", "tag2"));
+        PetDto petDto = apiSampleData.samplePetDto().category(category);
         UUID petId = controller.addPet(petDto);
         petDto.setId(petId);
         petDto.setCategory(category);
@@ -88,21 +87,12 @@ class PetControllerTest extends AbstractDatabaseTest {
     void shouldUpdatePet() {
         List<CategoryDto> categories = controller.listCategories().collect(Collectors.toList());
         UUID categoryId = categories.get(0).getId();
-        UUID petId = controller.addPet(new PetDto()
-                .category(new CategoryDto().id(categoryId))
-                .name("To be updated")
-                .tags(List.of("tag1", "tag2"))
-                .status(AVAILABLE)
-        );
+        UUID petId = controller.addPet(apiSampleData.samplePetDto().category(new CategoryDto().id(categoryId)));
 
-        PetDto updatedPet = new PetDto()
-                .id(petId)
-                .category(new CategoryDto().id(categories.get(1).getId()))
-                .name("Updated name")
-                .tags(List.of("tag3", "tag4"))
-                .status(SOLD);
+        PetDto updatedPet = apiSampleData.samplePetDto().category(categories.get(1));
         controller.updatePet(petId, updatedPet);
         updatedPet.setCategory(categories.get(1));
+        updatedPet.setId(petId);
         assertThat(controller.getPetById(petId))
                 .usingRecursiveComparison()
                 .isEqualTo(updatedPet);

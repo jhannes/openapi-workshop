@@ -125,10 +125,16 @@ public class PetController {
      */
     @PUT("/pet/{petId}")
     public void updatePet(@PathParam("petId") UUID petId, @JsonBody PetDto petDto) {
-        Pet pet = fromDto(petDto);
-        pet.setId(petId);
+        Pet pet = petRepository.retrieve(petId);
+        pet.setName(petDto.getName());
+        pet.setStatus(fromDto(petDto.getStatus()));
+        if (petDto.getCategory() != null) {
+            pet.setCategoryId(petDto.getCategory().getId());
+        }
         petRepository.save(pet);
-        petRepository.saveTags(pet, petDto.getTags());
+        if (petDto.getTags() != null && !petDto.getTags().isEmpty()) {
+            petRepository.saveTags(pet, petDto.getTags());
+        }
     }
 
     /**
@@ -179,7 +185,7 @@ public class PetController {
         Pet pet = new Pet();
         pet.setName(petDto.getName());
         pet.setStatus(fromDto(petDto.getStatus()));
-        pet.setCategoryId(petDto.getCategory().getId());
+        pet.setCategoryId(petDto.getCategory() != null ? petDto.getCategory().getId() : null);
         return pet;
     }
 

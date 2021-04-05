@@ -14,10 +14,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class UserControllerTest extends AbstractDatabaseTest {
 
     private final UserController controller = new UserController(dbContext);
-    
+    private ApiSampleData apiSampleData = new ApiSampleData(200);
+
     @Test
     void shouldSaveUser() {
-        UserDto userDto = sampleUserDto();
+        UserDto userDto = apiSampleData.sampleUserDto().password(null);
         String userName = controller.createUser(userDto);
         assertThat(controller.getUserByName(userName))
                 .usingRecursiveComparison()
@@ -26,7 +27,7 @@ class UserControllerTest extends AbstractDatabaseTest {
 
     @Test
     void shouldUpdateUser() {
-        UserDto originalUser = sampleUserDto();
+        UserDto originalUser = apiSampleData.sampleUserDto();
         controller.createUser(originalUser);
         String username = originalUser.getUsername();
         controller.updateUser(username, new UserDto()
@@ -46,7 +47,7 @@ class UserControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldLogUserIn() {
-        UserDto user = sampleUserDto()
+        UserDto user = apiSampleData.sampleUserDto()
                 .password("correct password");
         controller.createUser(user);
         AtomicReference<String> sessionUser = new AtomicReference<>();
@@ -62,21 +63,12 @@ class UserControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldLogRequireCorrectPassword() {
-        UserDto user = sampleUserDto()
+        UserDto user = apiSampleData.sampleUserDto()
                 .password("somepass");
         controller.createUser(user);
         AtomicReference<String> sessionUser = new AtomicReference<>();
         assertThatThrownBy(() -> controller.loginUser(user.getUsername(), "wrongpass", sessionUser::set))
                 .isInstanceOf(HttpUnauthorizedException.class);
-    }
-
-    private UserDto sampleUserDto() {
-        return new UserDto()
-                .username(sampleData.randomUsername())
-                .email(sampleData.randomEmail())
-                .firstName(sampleData.randomFirstName())
-                .lastName(sampleData.randomFirstName())
-                .phone(sampleData.randomPhoneNumber());
     }
 
 
