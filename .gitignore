@@ -2,3 +2,6 @@
 /target/
 *.iml
 /logevents.properties
+node_modules/
+.parcel-cache/
+react-client/dist
