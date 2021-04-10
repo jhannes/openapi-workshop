@@ -5,8 +5,12 @@ import {
   PetApi,
   petstore_auth,
   servers,
+  StoreApi,
+  UserApi,
 } from "@jhannes/openapi-workshop";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { BrowserRouter, Link } from "react-router-dom";
+import { Route, Switch } from "react-router";
 
 type LoadingState<T> =
   | { state: "loading" }
@@ -52,7 +56,9 @@ const ApiContext = React.createContext<{ apis: ApplicationApis }>({
 });
 
 function ListCategories() {
-  const petApi = new PetApi("http://localhost:8080/petstore/api");
+  const {
+    apis: { petApi },
+  } = useContext(ApiContext);
 
   const state = useLoader(async () => await petApi.listCategories());
 
@@ -72,7 +78,34 @@ function ListCategories() {
 }
 
 function Application() {
-  return <ListCategories />;
+  const basePath = "http://localhost:8080/petstore/api";
+  const apis: ApplicationApis = {
+    petApi: new PetApi(basePath),
+    storeApi: new StoreApi(basePath),
+    userApi: new UserApi(basePath),
+  };
+  return (
+    <ApiContext.Provider value={{ apis }}>
+      <BrowserRouter>
+        <header>
+          <Link to={"/categories"}>Categories</Link>
+          <Link to={"/pets"}>Pets</Link>
+          <div className="divider" />
+          <Link to={"/login"}>Login</Link>
+        </header>
+        <main>
+          <Switch>
+            <Route path={"/categories"}>
+              <ListCategories />
+            </Route>
+            <Route>
+              <h1>Not found</h1>
+            </Route>
+          </Switch>
+        </main>
+      </BrowserRouter>
+    </ApiContext.Provider>
+  );
 }
 
 ReactDOM.render(<Application />, document.getElementById("app"));
