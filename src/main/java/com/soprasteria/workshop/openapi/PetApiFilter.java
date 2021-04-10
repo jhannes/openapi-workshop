@@ -25,6 +25,8 @@ public class PetApiFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletResponse resp = (HttpServletResponse) response;
+        resp.setHeader("Access-Control-Allow-Origin", "*");
         try (DbContextConnection ignored = dbContext.startConnection(getDataSource())) {
             chain.doFilter(request, response);
         } catch (EntityNotFoundException e) {
