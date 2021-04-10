@@ -1,7 +1,11 @@
 openapi: 3.0.3
 servers:
-  - url: '/petstore/api'
-    description: current
+  - url: 'http://localhost:8080/petstore/api'
+    description: localhost
+  - url: 'https://petstore-openapi-workshop-test.azurewebsites.net/petstore/api'
+    description: test
+  - url: 'https://petstore-openapi-workshop.azurewebsites.net/petstore/api'
+    description: production
 info:
   description: 'This is a sample server Petstore server. For this sample, you can use the api key "special-key" to test the authorization filters'
   version: 1.0.0
