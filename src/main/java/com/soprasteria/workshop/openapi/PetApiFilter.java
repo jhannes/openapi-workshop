@@ -1,12 +1,15 @@
 package com.soprasteria.workshop.openapi;
 
 import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.openapi.infrastructure.servlet.OpenIdConnectAuthentication;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
 import org.h2.jdbcx.JdbcDataSource;
@@ -25,8 +28,18 @@ public class PetApiFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse resp = (HttpServletResponse) response;
+        Request req = (Request) request;
+        Response resp = (Response) response;
         resp.setHeader("Access-Control-Allow-Origin", "*");
+        
+        if (req.getMethod().equals("OPTIONS")) {
+            resp.setHeader("Access-Control-Allow-Headers", "Authorization");
+            resp.setStatus(204);
+            return;
+        }
+        
+        req.setAuthentication(new OpenIdConnectAuthentication());
+        
         try (DbContextConnection ignored = dbContext.startConnection(getDataSource())) {
             chain.doFilter(request, response);
         } catch (EntityNotFoundException e) {

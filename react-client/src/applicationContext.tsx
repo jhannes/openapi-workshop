@@ -18,6 +18,6 @@ export const ApiContext = React.createContext<{
   apis: ApplicationApis;
   activeDirectory: OpenIdConnectProvider;
 }>({
-  apis: servers.current,
+  apis: servers.production,
   activeDirectory,
 });

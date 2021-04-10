@@ -449,6 +449,8 @@ paths:
                 $ref: '#/components/schemas/User'
         '401':
           description: User not logged in
+      security:
+        - ad: []
   '/user/{username}':
     get:
       tags:
@@ -537,8 +539,14 @@ components:
       name: api_key
       in: header
     ad:
-      type: openIdConnect
-      openIdConnectUrl: https://login.microsoftonline.com/common/.well-known/openid-configuration
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://login.microsoftonline.com/common/oauth2/authorize
+          tokenUrl: https://login.microsoftonline.com/common/oauth2/token
+          scopes:
+            'openid': openid authentication
+            'email': read email address
     petstore_auth:
       type: oauth2
       flows:

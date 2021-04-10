@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { DependencyList, useEffect, useState } from "react";
 
 type LoadingState<T> =
   | { state: "loading" }
@@ -6,7 +6,8 @@ type LoadingState<T> =
   | { state: "error"; error: Error };
 
 export function useLoader<T>(
-  loadingFunction: () => Promise<T>
+  loadingFunction: () => Promise<T>,
+  deps: DependencyList = []
 ): LoadingState<T> {
   const [state, setState] = useState<LoadingState<T>>({ state: "loading" });
 
@@ -20,7 +21,7 @@ export function useLoader<T>(
         setState({ state: "error", error });
       }
     })();
-  }, []);
+  }, deps);
 
   return state;
 }

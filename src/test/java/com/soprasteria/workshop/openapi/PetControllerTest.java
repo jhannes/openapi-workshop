@@ -118,7 +118,7 @@ class PetControllerTest extends AbstractDatabaseTest {
         byte[] redDot = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==");
         UUID fileId = controller.uploadFile(petId, new ByteArrayInputStream(redDot), "reddot.png");
         assertThat(controller.getPetById(petId, servletUrl).getPhotoUrls())
-                .contains(servletUrl + "pet/images/" + fileId);
+                .contains(servletUrl + "/pet/images/" + fileId);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         controller.getImage(fileId).transferTo(buffer);
         assertThat(buffer.toByteArray()).isEqualTo(redDot);

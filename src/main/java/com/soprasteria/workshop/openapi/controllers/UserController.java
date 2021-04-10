@@ -4,6 +4,7 @@ import com.soprasteria.workshop.openapi.domain.User;
 import com.soprasteria.workshop.openapi.domain.repository.UserRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
 import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
 import org.actioncontroller.ContentLocationHeader;
 import org.actioncontroller.DELETE;
 import org.actioncontroller.GET;
@@ -13,11 +14,11 @@ import org.actioncontroller.PUT;
 import org.actioncontroller.PathParam;
 import org.actioncontroller.RequestParam;
 import org.actioncontroller.SessionParameter;
+import org.actioncontroller.UserPrincipal;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class UserController {
@@ -87,16 +88,15 @@ public class UserController {
     
     /**
      * Get user by user name
-     *
-     * @param username The name that needs to be fetched. Use user1 for testing.  (required)
-     * @return UserDto
      */
     @GET("/user/current")
     @JsonBody
-    public UserDto getCurrentUser(@SessionParameter(value = "username") String username) {
-        return repository.query().username(username).single()
-                .map(this::toDto)
-                .orElseThrow(HttpUnauthorizedException::new);
+    public UserDto getCurrentUser(@UserPrincipal PetStoreUser principal) {
+        return new UserDto()
+                .username(principal.getName())
+                .firstName(principal.getFirstName())
+                .lastName(principal.getLastName())
+                .email(principal.getEmail());
     }
 
     private UserDto toDto(User user) {

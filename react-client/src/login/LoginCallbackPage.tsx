@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { OpenIdConnectProvider } from "../applicationContext";
 import { fetchJson } from "../lib/fetchJson";
 import { Link } from "react-router-dom";
+import { LoadingView } from "../views/LoadingView";
 
 export interface TokenResponse {
   access_token: string;
@@ -23,25 +24,29 @@ export function LoginCallbackPage({
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const loginState = JSON.parse(sessionStorage.getItem("loginState")!);
 
+  async function fetchToken(code: string, code_verifier: string) {
+    const { token_endpoint } = await fetchJson(openIdConnectUrl);
+    const body = {
+      grant_type: "authorization_code",
+      code,
+      client_id,
+      redirect_uri: window.location.origin + "/login/callback",
+      code_verifier,
+    };
+    const tokenResponse: TokenResponse = await fetchJson(token_endpoint, {
+      method: "POST",
+      body: new URLSearchParams(body),
+    });
+    console.log(tokenResponse);
+    sessionStorage.removeItem("loginState");
+    onComplete(tokenResponse);
+  }
+
   useEffect(() => {
     (async () => {
       if (code && loginState) {
-        const { token_endpoint } = await fetchJson(openIdConnectUrl);
         const { code_verifier } = loginState;
-        const body = {
-          grant_type: "authorization_code",
-          code,
-          client_id,
-          redirect_uri: window.location.origin + "/login/callback",
-          code_verifier,
-        };
-        const tokenResponse: TokenResponse = await fetchJson(token_endpoint, {
-          method: "POST",
-          body: new URLSearchParams(body),
-        });
-        console.log(tokenResponse);
-        sessionStorage.removeItem("loginState");
-        onComplete(tokenResponse);
+        await fetchToken(code, code_verifier);
       }
     })();
   }, [code]);
@@ -62,5 +67,5 @@ export function LoginCallbackPage({
     );
   }
 
-  return <div>Please wait</div>;
+  return <LoadingView />;
 }

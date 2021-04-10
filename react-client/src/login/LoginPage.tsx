@@ -3,6 +3,8 @@ import { OpenIdConnectProvider } from "../applicationContext";
 import { randomString } from "../lib/randomString";
 import { fetchJson } from "../lib/fetchJson";
 import { sha256 } from "../lib/sha256";
+import { LoadingView } from "../views/LoadingView";
+import { useEffect } from "react";
 
 export function LoginPage({ provider }: { provider: OpenIdConnectProvider }) {
   const { openIdConnectUrl, client_id, domain_hint } = provider;
@@ -21,6 +23,7 @@ export function LoginPage({ provider }: { provider: OpenIdConnectProvider }) {
       response_mode: "fragment",
       client_id,
       state,
+      scope: "openid email profile",
       code_challenge: await sha256(code_verifier),
       code_challenge_method: "S256",
       redirect_uri: window.location.origin + "/login/callback",
@@ -31,9 +34,9 @@ export function LoginPage({ provider }: { provider: OpenIdConnectProvider }) {
       authorization_endpoint + "?" + new URLSearchParams(payload);
   }
 
-  return (
-    <div>
-      <button onClick={startLogin}>Login</button>
-    </div>
-  );
+  useEffect(() => {
+    startLogin();
+  }, []);
+
+  return <LoadingView />;
 }

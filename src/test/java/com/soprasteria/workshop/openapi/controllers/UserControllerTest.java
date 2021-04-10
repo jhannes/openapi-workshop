@@ -2,6 +2,7 @@ package com.soprasteria.workshop.openapi.controllers;
 
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
+import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
 import org.actioncontroller.HttpUnauthorizedException;
 import org.junit.jupiter.api.Test;
 
@@ -47,18 +48,29 @@ class UserControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldLogUserIn() {
-        UserDto user = apiSampleData.sampleUserDto()
-                .password("correct password");
-        controller.createUser(user);
-        AtomicReference<String> sessionUser = new AtomicReference<>();
-        controller.loginUser(user.getUsername(), "correct password", sessionUser::set);
-        assertThat(controller.getCurrentUser(sessionUser.get()))
-                .usingRecursiveComparison()
-                .ignoringFields("password")
-                .isEqualTo(user);
-        controller.logoutUser(sessionUser::set);
-        assertThatThrownBy(() -> controller.getCurrentUser(sessionUser.get()))
-                .isInstanceOf(HttpUnauthorizedException.class);
+        PetStoreUser petStoreUser = new PetStoreUser() {
+            @Override
+            public String getName() {
+                return "myName";
+            }
+
+            @Override
+            public String getFirstName() {
+                return null;
+            }
+
+            @Override
+            public String getLastName() {
+                return null;
+            }
+
+            @Override
+            public String getEmail() {
+                return null;
+            }
+        };
+        assertThat(controller.getCurrentUser(petStoreUser).getUsername())
+                .isEqualTo("myName");
     }
     
     @Test

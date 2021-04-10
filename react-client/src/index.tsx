@@ -2,12 +2,12 @@ import * as React from "react";
 import { useContext, useState } from "react";
 import * as ReactDOM from "react-dom";
 import {
+  ad,
   ApplicationApis,
   PetApi,
   PetDtoStatusDtoEnum,
   petstore_auth,
-  StoreApi,
-  UserApi,
+  servers,
 } from "@jhannes/openapi-workshop";
 import { BrowserRouter, Link } from "react-router-dom";
 import { Route, Switch, useHistory } from "react-router";
@@ -15,6 +15,8 @@ import { useLoader } from "./lib/useLoader";
 import { activeDirectory, ApiContext } from "./applicationContext";
 import { LoginPage } from "./login/LoginPage";
 import { LoginCallbackPage, TokenResponse } from "./login/LoginCallbackPage";
+import { ErrorView } from "./views/ErrorView";
+import { useLocalStorage } from "./lib/useLocalStorage";
 
 function AddPet() {
   const petApi = new PetApi();
@@ -54,18 +56,33 @@ function ListCategories() {
   );
 }
 
+function ApplicationLoading() {
+  return <div>Please wait</div>;
+}
+
 function Application() {
-  const [access_token, setAccessToken] = useState<string | undefined>();
+  const [access_token, setAccessToken] = useLocalStorage("access_token");
   const history = useHistory();
-  const basePath = "http://localhost:8080/petstore/api";
-  const apis: ApplicationApis = {
-    petApi: new PetApi(basePath),
-    storeApi: new StoreApi(basePath),
-    userApi: new UserApi(basePath),
-  };
+  const apis: ApplicationApis = servers.localhost;
+  const userInfoState = useLoader(async () => {
+    return access_token
+      ? await apis.userApi.getCurrentUser({
+          security: new ad(access_token),
+        })
+      : null;
+  }, [access_token]);
+
   function handleLoginComplete(tokenResponse: TokenResponse) {
+    localStorage.setItem("tokenResponse", JSON.stringify(tokenResponse));
     setAccessToken(tokenResponse.access_token);
     history.push("/");
+  }
+
+  if (userInfoState.state === "loading") {
+    return <ApplicationLoading />;
+  }
+  if (userInfoState.state === "error") {
+    return <ErrorView error={userInfoState.error} />;
   }
 
   return (
@@ -74,7 +91,11 @@ function Application() {
         <Link to={"/categories"}>Categories</Link>
         <Link to={"/pets"}>Pets</Link>
         <div className="divider" />
-        <Link to={"/login"}>Login</Link>
+        {userInfoState.data ? (
+          <Link to={"/profile"}>{userInfoState.data.firstName}</Link>
+        ) : (
+          <Link to={"/login"}>Login</Link>
+        )}
       </header>
       <main>
         <Switch>
