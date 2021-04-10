@@ -102,6 +102,9 @@
                             <modelNameSuffix>Dto</modelNameSuffix>
                             <output>target/generated-sources/generated-typescript</output>
                             <configOptions>
+                                <npmName>@jhannes/openapi-workshop-api</npmName>
+                                <npmVersion>1.0.0-draft</npmVersion>
+                                <npmRepository>https://npm.pkg.github.com</npmRepository>
                                 <supportsES6>true</supportsES6>
                                 <withInterfaces>true</withInterfaces>
                                 <generateModelTests>true</generateModelTests>
