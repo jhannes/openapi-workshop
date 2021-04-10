@@ -49,8 +49,15 @@
             plugins: [
                 SwaggerUIBundle.plugins.DownloadUrl
             ],
+            oauth2RedirectUrl: window.location.origin + "/petstore/swagger-ui/oauth2-redirect.html",
             layout: "StandaloneLayout"
         });
+        window.ui.initOAuth({
+            clientId: "55a62cf9-3f20-47e0-b61d-51f835fd5945",
+            appName: "your-app-name",
+            scopes: "openid profile email",
+            usePkceWithAuthorizationCodeGrant: true
+        })
     };
 </script>
 </body>
