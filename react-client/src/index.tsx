@@ -1,21 +1,23 @@
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import * as ReactDOM from "react-dom";
 import {
-  ad,
+  activeDirectory,
   ApplicationApis,
-  petstore_auth,
-  servers,
+  PetApi,
+  StoreApi,
+  UserApi,
 } from "@jhannes/openapi-workshop";
 import { BrowserRouter, Link } from "react-router-dom";
 import { Route, Switch, useHistory } from "react-router";
 import { useLoader } from "./lib/useLoader";
-import { activeDirectory, ApiContext } from "./applicationContext";
+import { ApiContext, identityProvider } from "./applicationContext";
 import { TokenResponse } from "./login/LoginCallbackPage";
 import { ErrorView } from "./views/ErrorView";
 import { useLocalStorage } from "./lib/useLocalStorage";
 import { LoginPage } from "./login/LoginPage";
 import { PetsPage } from "./pets";
+import { LoggedOutError } from "@jhannes/openapi-workshop/dist/base";
 
 function ListCategories() {
   const {
@@ -46,14 +48,33 @@ function ApplicationLoading() {
 function Application() {
   const [access_token, setAccessToken] = useLocalStorage("access_token");
   const history = useHistory();
-  const apis: ApplicationApis = servers.localhost;
+  //const basePath = "http://localhost:8080/petstore/api";
+  const basePath = "https://openapi-workshop.azurewebsites.net/petstore/api";
+  const options = access_token
+    ? {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    : undefined;
+  const apis: ApplicationApis = {
+    petApi: new PetApi(basePath, options),
+    storeApi: new StoreApi(basePath, options),
+    userApi: new UserApi(basePath, options),
+  };
   const userInfo = useLoader(async () => {
     return access_token
       ? await apis.userApi.getCurrentUser({
-          security: new ad(access_token),
+          security: new activeDirectory(access_token),
         })
       : null;
   }, [access_token]);
+  useEffect(() => {
+    if (userInfo.failed && userInfo.error instanceof LoggedOutError) {
+      console.log(userInfo.error.response.status);
+      setAccessToken(undefined);
+    }
+  }, [userInfo.failed]);
 
   function handleLoginComplete(tokenResponse: TokenResponse) {
     localStorage.setItem("tokenResponse", JSON.stringify(tokenResponse));
@@ -70,7 +91,11 @@ function Application() {
 
   return (
     <ApiContext.Provider
-      value={{ apis, activeDirectory, security: new petstore_auth("") }}
+      value={{
+        apis,
+        identityProvider,
+        security: new activeDirectory(access_token || ""),
+      }}
     >
       <header>
         <Link to={"/categories"}>Categories</Link>
@@ -93,7 +118,7 @@ function Application() {
           <Route path={"/login"}>
             <LoginPage
               onComplete={handleLoginComplete}
-              provider={activeDirectory}
+              provider={identityProvider}
             />
           </Route>
           <Route>

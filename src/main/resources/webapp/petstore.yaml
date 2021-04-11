@@ -1,11 +1,11 @@
 openapi: 3.0.3
 servers:
+  - url: 'https://openapi-workshop.azurewebsites.net/petstore/api'
+    description: production
+  - url: 'https://openapi-workshop-johannes.azurewebsites.net/petstore/api'
+    description: test
   - url: 'http://localhost:8080/petstore/api'
     description: localhost
-  - url: 'https://petstore-openapi-workshop-test.azurewebsites.net/petstore/api'
-    description: test
-  - url: 'https://petstore-openapi-workshop.azurewebsites.net/petstore/api'
-    description: production
 info:
   description: 'This is a sample server Petstore server used for OpenAPI training'
   contact: 
@@ -81,9 +81,6 @@ paths:
                     breed: Mixed
         '400':
           description: Invalid status value
-      security:
-        - {}
-        - activeDirectory: []
   /pet/findByTags:
     get:
       tags:
@@ -112,9 +109,6 @@ paths:
                   $ref: '#/components/schemas/Pet'
         '400':
           description: Invalid tag value
-      security:
-        - {}
-        - activeDirectory: []
   '/pet/{petId}':
     get:
       tags:
@@ -141,8 +135,6 @@ paths:
           description: Invalid ID supplied
         '404':
           description: Pet not found
-      security:
-        - activeDirectory: []
     post:
       tags:
         - pet

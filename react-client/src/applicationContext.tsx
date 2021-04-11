@@ -1,11 +1,11 @@
 import * as React from "react";
 import {
   ApplicationApis,
-  petstore_auth,
+  activeDirectory,
   servers,
 } from "@jhannes/openapi-workshop";
 
-export const activeDirectory = {
+export const identityProvider = {
   openIdConnectUrl:
     "https://login.microsoftonline.com/common/.well-known/openid-configuration",
   client_id: "55a62cf9-3f20-47e0-b61d-51f835fd5945",
@@ -20,10 +20,10 @@ export interface OpenIdConnectProvider {
 
 export const ApiContext = React.createContext<{
   apis: ApplicationApis;
-  activeDirectory: OpenIdConnectProvider;
-  security: petstore_auth;
+  identityProvider: OpenIdConnectProvider;
+  security: activeDirectory;
 }>({
   apis: servers.production,
-  activeDirectory,
-  security: new petstore_auth(""),
+  identityProvider,
+  security: new activeDirectory(""),
 });

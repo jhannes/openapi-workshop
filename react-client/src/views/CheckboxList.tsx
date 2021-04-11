@@ -20,7 +20,7 @@ export function CheckboxList<T extends string>({
           <input
             type="checkbox"
             className="type"
-            checked={checked[value]}
+            checked={checked[value] || false}
             onChange={(e) =>
               setChecked({ ...checked, [value]: e.target.checked })
             }

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 export function useLocalStorage(
   key: string,
   initialValue?: string
-): [string | undefined, (value: string) => void] {
+): [string | undefined, (value?: string) => void] {
   const [value, setValue] = useState<string | undefined>(
     () => localStorage.getItem(key) || initialValue
   );

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useContext, useState } from "react";
 import {
+  activeDirectory,
   PetDtoStatusDtoEnum,
   PetDtoStatusDtoEnumValues,
-  petstore_auth,
 } from "@jhannes/openapi-workshop";
 import { ApiContext } from "../applicationContext";
 import { useLoader } from "../lib/useLoader";
@@ -18,11 +18,7 @@ function ShowPetList({ statuses }: { statuses: PetDtoStatusDtoEnum[] }) {
   } = useContext(ApiContext);
 
   const pets = useLoader(
-    () =>
-      petApi.findPetsByStatus({
-        queryParams: { status: statuses },
-        security: new petstore_auth(""),
-      }),
+    () => petApi.findPetsByStatus({ queryParams: { status: statuses } }),
     [statuses]
   );
 

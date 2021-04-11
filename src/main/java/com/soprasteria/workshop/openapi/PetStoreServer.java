@@ -20,6 +20,8 @@ import org.fluentjdbc.DbContextConnection;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;
 
+import java.util.Optional;
+
 public class PetStoreServer {
     
     private final Server server = new Server();
@@ -39,7 +41,9 @@ public class PetStoreServer {
         handlers.addHandler(new MovedContextHandler(null, "/", "/petstore"));
         server.setHandler(handlers);
         server.setRequestLog(new Slf4jRequestLog());
-        server.addConnector(createConnector(server, 8080));
+        int port = Optional.ofNullable(System.getenv("HTTP_PLATFORM_PORT")).map(Integer::parseInt)
+                .orElse(8080);
+        server.addConnector(createConnector(server, port));
         server.start();
     }
 
