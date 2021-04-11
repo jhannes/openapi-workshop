@@ -1,5 +1,6 @@
 package com.soprasteria.workshop.openapi;
 
+import com.soprasteria.workshop.openapi.infrastructure.Slf4jRequestLog;
 import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.infrastructure.servlet.OpenIdConnectAuthentication;
 import jakarta.servlet.Filter;
@@ -13,6 +14,7 @@ import org.eclipse.jetty.server.Response;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
 import org.h2.jdbcx.JdbcDataSource;
+import org.slf4j.MDC;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -30,6 +32,9 @@ public class PetApiFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         Request req = (Request) request;
         Response resp = (Response) response;
+        MDC.clear();
+        MDC.put("request", Slf4jRequestLog.getRequest(req));
+        MDC.put("remoteAddress", req.getRemoteAddr());
         resp.setHeader("Access-Control-Allow-Origin", "*");
         
         if (req.getMethod().equals("OPTIONS")) {

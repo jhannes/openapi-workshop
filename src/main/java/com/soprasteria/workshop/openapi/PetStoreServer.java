@@ -2,9 +2,16 @@ package com.soprasteria.workshop.openapi;
 
 import com.soprasteria.workshop.openapi.domain.Category;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
+import com.soprasteria.workshop.openapi.infrastructure.Slf4jRequestLog;
 import jakarta.servlet.ServletContextListener;
+import org.eclipse.jetty.server.ConnectionFactory;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.MovedContextHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -15,7 +22,7 @@ import org.h2.jdbcx.JdbcDataSource;
 
 public class PetStoreServer {
     
-    private final Server server = new Server(8080);
+    private final Server server = new Server();
     private final DbContext context = new DbContext();
     private final PetStoreApplication petStoreApplication = new PetStoreApplication(context);
 
@@ -31,8 +38,24 @@ public class PetStoreServer {
         handlers.addHandler(createContext("/petstore", petStoreApplication));
         handlers.addHandler(new MovedContextHandler(null, "/", "/petstore"));
         server.setHandler(handlers);
+        server.setRequestLog(new Slf4jRequestLog());
+        server.addConnector(createConnector(server, 8080));
         server.start();
     }
+
+    private Connector createConnector(Server server, int port) {
+        ServerConnector connector = new ServerConnector(server);
+        connector.setPort(port);
+        connector.addConnectionFactory(createConnectionFactory());
+        return connector;
+    }
+
+    private ConnectionFactory createConnectionFactory() {
+        HttpConfiguration config = new HttpConfiguration();
+        config.addCustomizer(new ForwardedRequestCustomizer());
+        return new HttpConnectionFactory(config);
+    }
+
 
     private JdbcDataSource testDataSource() {
         JdbcDataSource dataSource = new JdbcDataSource();

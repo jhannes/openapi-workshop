@@ -12,6 +12,7 @@ import org.jsonbuddy.JsonObject;
 import org.jsonbuddy.parse.JsonHttpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.security.auth.Subject;
 import java.io.IOException;
@@ -27,10 +28,15 @@ public class OpenIdConnectAuthentication implements Authentication.Deferred {
     public Authentication authenticate(ServletRequest request) {
         Request req = (Request) request;
         String authorization = req.getHeader("Authorization");
-        if (authorization == null) {
+        if (authorization == null || authorization.length() < 10) {
             return null;
         }
-        return createUserAuthentication(getAuthorization(authorization));
+        OpenIdConnectUserPrincipal principal = getAuthorization(authorization);
+        if (principal == null) {
+            return null;
+        }
+        MDC.put("user", principal.getName());
+        return createUserAuthentication(principal);
     }
 
     private OpenIdConnectUserPrincipal getAuthorization(String authorization) {
