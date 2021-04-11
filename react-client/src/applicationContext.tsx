@@ -1,5 +1,9 @@
 import * as React from "react";
-import { ApplicationApis, servers } from "@jhannes/openapi-workshop";
+import {
+  ApplicationApis,
+  petstore_auth,
+  servers,
+} from "@jhannes/openapi-workshop";
 
 export const activeDirectory = {
   openIdConnectUrl:
@@ -17,7 +21,9 @@ export interface OpenIdConnectProvider {
 export const ApiContext = React.createContext<{
   apis: ApplicationApis;
   activeDirectory: OpenIdConnectProvider;
+  security: petstore_auth;
 }>({
   apis: servers.production,
   activeDirectory,
+  security: new petstore_auth(""),
 });

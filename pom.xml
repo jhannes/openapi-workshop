@@ -103,7 +103,7 @@
                             <output>target/generated-sources/generated-typescript</output>
                             <configOptions>
                                 <npmName>@jhannes/openapi-workshop</npmName>
-                                <npmVersion>1.0.0-draft</npmVersion>
+                                <npmVersion>0.9.0-draft.1</npmVersion>
                                 <npmRepository>https://npm.pkg.github.com</npmRepository>
                                 <supportsES6>true</supportsES6>
                                 <withInterfaces>true</withInterfaces>

@@ -7,7 +7,10 @@ servers:
   - url: 'https://petstore-openapi-workshop.azurewebsites.net/petstore/api'
     description: production
 info:
-  description: 'This is a sample server Petstore server. For this sample, you can use the api key "special-key" to test the authorization filters'
+  description: 'This is a sample server Petstore server used for OpenAPI training'
+  contact: 
+    name: Github
+    url: https://github.com/jhannes/openapi-workshop/
   version: 1.0.0
   title: OpenAPI Petstore
   license:
@@ -79,6 +82,7 @@ paths:
         '400':
           description: Invalid status value
       security:
+        - {}
         - activeDirectory: []
   /pet/findByTags:
     get:
@@ -109,6 +113,7 @@ paths:
         '400':
           description: Invalid tag value
       security:
+        - {}
         - activeDirectory: []
   '/pet/{petId}':
     get:

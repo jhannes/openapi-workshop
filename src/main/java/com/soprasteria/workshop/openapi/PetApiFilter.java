@@ -33,7 +33,7 @@ public class PetApiFilter implements Filter {
         resp.setHeader("Access-Control-Allow-Origin", "*");
         
         if (req.getMethod().equals("OPTIONS")) {
-            resp.setHeader("Access-Control-Allow-Headers", "Authorization");
+            resp.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
             resp.setStatus(204);
             return;
         }

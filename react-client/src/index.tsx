@@ -1,11 +1,9 @@
 import * as React from "react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import * as ReactDOM from "react-dom";
 import {
   ad,
   ApplicationApis,
-  PetApi,
-  PetDtoStatusDtoEnum,
   petstore_auth,
   servers,
 } from "@jhannes/openapi-workshop";
@@ -13,43 +11,28 @@ import { BrowserRouter, Link } from "react-router-dom";
 import { Route, Switch, useHistory } from "react-router";
 import { useLoader } from "./lib/useLoader";
 import { activeDirectory, ApiContext } from "./applicationContext";
-import { LoginPage } from "./login/LoginPage";
-import { LoginCallbackPage, TokenResponse } from "./login/LoginCallbackPage";
+import { TokenResponse } from "./login/LoginCallbackPage";
 import { ErrorView } from "./views/ErrorView";
 import { useLocalStorage } from "./lib/useLocalStorage";
-
-function AddPet() {
-  const petApi = new PetApi();
-  const [category, setCategory] = useState("");
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState<PetDtoStatusDtoEnum>("available");
-
-  const security = new petstore_auth("test");
-
-  function handleSubmit() {
-    petApi.addPet({
-      petDto: { category: { id: category }, name, status },
-      security,
-    });
-  }
-}
+import { LoginPage } from "./login/LoginPage";
+import { PetsPage } from "./pets";
 
 function ListCategories() {
   const {
     apis: { petApi },
   } = useContext(ApiContext);
 
-  const state = useLoader(async () => await petApi.listCategories());
+  const categories = useLoader(async () => await petApi.listCategories());
 
-  if (state.state === "loading") {
+  if (categories.loading) {
     return <div>Loading...</div>;
   }
-  if (state.state === "error") {
-    return <div>Error: {state.error.toString()}</div>;
+  if (categories.failed) {
+    return <div>Error: {categories.error.toString()}</div>;
   }
   return (
     <ul>
-      {state.data.map(({ id, name }) => (
+      {categories.data.map(({ id, name }) => (
         <li key={id}>{name}</li>
       ))}
     </ul>
@@ -64,7 +47,7 @@ function Application() {
   const [access_token, setAccessToken] = useLocalStorage("access_token");
   const history = useHistory();
   const apis: ApplicationApis = servers.localhost;
-  const userInfoState = useLoader(async () => {
+  const userInfo = useLoader(async () => {
     return access_token
       ? await apis.userApi.getCurrentUser({
           security: new ad(access_token),
@@ -78,23 +61,25 @@ function Application() {
     history.push("/");
   }
 
-  if (userInfoState.state === "loading") {
+  if (userInfo.loading) {
     return <ApplicationLoading />;
   }
-  if (userInfoState.state === "error") {
-    return <ErrorView error={userInfoState.error} />;
+  if (userInfo.failed) {
+    return <ErrorView error={userInfo.error} />;
   }
 
   return (
-    <ApiContext.Provider value={{ apis, activeDirectory }}>
+    <ApiContext.Provider
+      value={{ apis, activeDirectory, security: new petstore_auth("") }}
+    >
       <header>
         <Link to={"/categories"}>Categories</Link>
         <Link to={"/pets"}>Pets</Link>
         <div className="divider" />
-        {userInfoState.data ? (
-          <Link to={"/profile"}>{userInfoState.data.firstName}</Link>
+        {userInfo.data ? (
+          <Link to={"/profile"}>{userInfo.data.firstName}</Link>
         ) : (
-          <Link to={"/login"}>Login</Link>
+          <Link to={"/login/authorize"}>Login</Link>
         )}
       </header>
       <main>
@@ -102,14 +87,14 @@ function Application() {
           <Route path={"/categories"}>
             <ListCategories />
           </Route>
-          <Route path={"/login/callback"}>
-            <LoginCallbackPage
+          <Route path={"/pets"}>
+            <PetsPage />
+          </Route>
+          <Route path={"/login"}>
+            <LoginPage
               onComplete={handleLoginComplete}
               provider={activeDirectory}
             />
-          </Route>
-          <Route path={"/login"}>
-            <LoginPage provider={activeDirectory} />
           </Route>
           <Route>
             <h1>Not found</h1>
