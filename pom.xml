@@ -199,6 +199,10 @@
                                 <include>${project.build.finalName}.jar</include>
                             </resource>
                             <resource>
+                                <directory>${project.basedir}/src/local/azure</directory>
+                                <include>**/*.properties</include>
+                            </resource>
+                            <resource>
                                 <directory>${project.basedir}/src/main/azure</directory>
                                 <include>**/*.properties</include>
                             </resource>
