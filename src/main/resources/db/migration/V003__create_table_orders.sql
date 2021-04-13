@@ -1,11 +1,11 @@
-create table orders
+create table ORDERS
 (
-    id           uuid primary key,
-    pet_id       uuid                     not null references pets (id) on delete restrict,
+    id           uniqueidentifier primary key,
+    pet_id       uniqueidentifier                     not null references pets (id),
     order_status varchar(20)              not null,
-    is_complete  boolean                  not null,
-    ship_date    timestamp with time zone,
+    is_complete  bit                  not null,
+    ship_date    datetime,
     quantity     integer                  not null,
-    created_at   timestamp with time zone not null,
-    updated_at   timestamp with time zone not null
+    created_at   datetime not null,
+    updated_at   datetime not null
 )

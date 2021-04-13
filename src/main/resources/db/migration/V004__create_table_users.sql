@@ -1,12 +1,12 @@
-create table users
+create table USERS
 (
-    id            uuid primary key,
+    id            uniqueidentifier primary key,
     username      varchar(50)              not null unique,
     first_name    varchar(50)              not null,
     last_name     varchar(50)              not null,
     email         varchar(100),
     phone         varchar(50),
     password_hash varchar(100),
-    created_at    timestamp with time zone not null,
-    updated_at    timestamp with time zone not null
+    created_at    datetime not null,
+    updated_at    datetime not null
 );

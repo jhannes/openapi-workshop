@@ -1,23 +1,23 @@
 create table PETS
 (
-    id          uuid primary key,
+    id          uniqueidentifier primary key,
     name        varchar(100) not null,
-    category_id uuid         not null references categories (id) on delete cascade,
+    category_id uniqueidentifier         not null references categories (id) on delete cascade,
     status      varchar(100)
 );
 
 create table PETS_TAGS
 (
-    id     uuid primary key,
+    id     uniqueidentifier primary key,
     tag    varchar(100) not null,
-    pet_id uuid references pets (id) on delete cascade,
+    pet_id uniqueidentifier references pets (id) on delete cascade,
     unique (tag, pet_id)
 );
 
 create table PETS_IMAGES
 (
-    id       uuid primary key,
-    pet_id   uuid references pets (id) on delete cascade,
+    id       uniqueidentifier primary key,
+    pet_id   uniqueidentifier references pets (id) on delete cascade,
     filename varchar(100) not null,
-    content  blob not null
+    content  varbinary not null
 );

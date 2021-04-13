@@ -56,7 +56,7 @@ public class PetApiFilter implements Filter {
         return dataSource.orElseThrow(() -> new IllegalStateException("database not setup"));
     }
 
-    public void setDataSource(JdbcDataSource dataSource) {
+    public void setDataSource(DataSource dataSource) {
         this.dataSource = Optional.of(dataSource);
     }
 }
