@@ -1,5 +1,6 @@
 package com.soprasteria.workshop.openapi.controllers;
 
+import com.soprasteria.workshop.openapi.TestPetStoreUser;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
 import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
@@ -48,27 +49,7 @@ class UserControllerTest extends AbstractDatabaseTest {
     
     @Test
     void shouldLogUserIn() {
-        PetStoreUser petStoreUser = new PetStoreUser() {
-            @Override
-            public String getName() {
-                return "myName";
-            }
-
-            @Override
-            public String getFirstName() {
-                return null;
-            }
-
-            @Override
-            public String getLastName() {
-                return null;
-            }
-
-            @Override
-            public String getEmail() {
-                return null;
-            }
-        };
+        PetStoreUser petStoreUser = new TestPetStoreUser();
         assertThat(controller.getCurrentUser(petStoreUser).getUsername())
                 .isEqualTo("myName");
     }

@@ -8,6 +8,7 @@ import com.soprasteria.workshop.openapi.domain.repository.PetRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
 import com.soprasteria.workshop.openapi.infrastructure.servlet.Multipart;
+import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
 import org.actioncontroller.ContentBody;
 import org.actioncontroller.ContentLocationHeader;
 import org.actioncontroller.DELETE;
@@ -17,6 +18,7 @@ import org.actioncontroller.PUT;
 import org.actioncontroller.PathParam;
 import org.actioncontroller.RequestParam;
 import org.actioncontroller.ServletUrl;
+import org.actioncontroller.UserPrincipal;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
@@ -55,7 +57,10 @@ public class PetController {
      */
     @POST("/pet")
     @ContentLocationHeader("/pet/{petId}")
-    public UUID addPet(@JsonBody PetDto petDto) {
+    public UUID addPet(
+            @JsonBody PetDto petDto,
+            @UserPrincipal PetStoreUser user
+    ) {
         Pet pet = fromDto(petDto);
         petRepository.save(pet);
         petRepository.saveTags(pet, petDto.getTags());
@@ -68,7 +73,7 @@ public class PetController {
      * @param petId Pet id to delete (required)
      */
     @DELETE("/pet/{petId}")
-    public void deletePet(@PathParam("petId") UUID petId) {
+    public void deletePet(@PathParam("petId") UUID petId, @UserPrincipal PetStoreUser user) {
         petRepository.delete(petRepository.retrieve(petId));
     }
 
@@ -128,7 +133,11 @@ public class PetController {
      * @param petDto Pet object that needs to be added to the store (optional)
      */
     @PUT("/pet/{petId}")
-    public void updatePet(@PathParam("petId") UUID petId, @JsonBody PetDto petDto) {
+    public void updatePet(
+            @PathParam("petId") UUID petId,
+            @JsonBody PetDto petDto,
+            @UserPrincipal PetStoreUser user
+    ) {
         Pet pet = petRepository.retrieve(petId);
         pet.setName(petDto.getName());
         pet.setStatus(fromDto(petDto.getStatus()));
@@ -152,7 +161,8 @@ public class PetController {
     public void updatePetWithForm(
             @PathParam("petId") UUID petId,
             @RequestParam("name") Optional<String> name,
-            @RequestParam("status") Optional<String> status
+            @RequestParam("status") Optional<String> status,
+            @UserPrincipal PetStoreUser user
     ) {
         Pet pet = petRepository.retrieve(petId);
         name.ifPresent(pet::setName);
@@ -171,7 +181,9 @@ public class PetController {
     public UUID uploadFile(
             @PathParam("petId") UUID petId,
             @Multipart("file") InputStream fileContent,
-            @Multipart.Filename("file") String fileName
+            @Multipart.Filename("file") String fileName,
+            @UserPrincipal PetStoreUser user
+
     ) {
         Pet pet = petRepository.retrieve(petId);
         return petRepository.saveImage(pet, fileName, fileContent);
