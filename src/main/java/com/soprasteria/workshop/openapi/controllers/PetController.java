@@ -61,6 +61,10 @@ public class PetController {
             @JsonBody PetDto petDto,
             @UserPrincipal PetStoreUser user
     ) {
+        if (!petDto.missingRequiredFields().isEmpty()) {
+            throw new IllegalArgumentException("Missing required fields " + petDto.missingRequiredFields());
+        }
+        
         Pet pet = fromDto(petDto);
         petRepository.save(pet);
         petRepository.saveTags(pet, petDto.getTags());
