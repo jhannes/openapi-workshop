@@ -148,6 +148,9 @@ public class PetController {
         if (petDto.getCategory() != null) {
             pet.setCategoryId(petDto.getCategory().getId());
         }
+        if (pet.getDescription() != null) {
+            pet.setDescription(petDto.getDescription());
+        }
         petRepository.save(pet);
         if (petDto.getTags() != null && !petDto.getTags().isEmpty()) {
             petRepository.saveTags(pet, petDto.getTags());
@@ -202,6 +205,7 @@ public class PetController {
     private Pet fromDto(PetDto petDto) {
         Pet pet = new Pet();
         pet.setName(petDto.getName());
+        pet.setDescription(petDto.getDescription());
         pet.setStatus(fromDto(petDto.getStatus()));
         pet.setCategoryId(petDto.getCategory() != null ? petDto.getCategory().getId() : null);
         return pet;
@@ -210,6 +214,7 @@ public class PetController {
     private PetDto toDto(PetEntity pet, String servletUrl) {
         return new PetDto()
                 .name(pet.getPet().getName())
+                .description(pet.getPet().getDescription())
                 .id(pet.getPet().getId())
                 .status(toDto(pet.getPet().getStatus()))
                 .category(new CategoryDto().id(pet.getCategory().getId()).name(pet.getCategory().getName()))

@@ -37,6 +37,7 @@ public class ApiSampleData {
     public PetDto samplePetDto() {
         return new PetDto()
                 .name(generator.randomString("pet", "name"))
+                .description(generator.randomString("pet", "description"))
                 .category(sampleCategoryDto())
                 .tags(generator.randomStringList("pet", "tags"))
                 .status(generator.pickOne(List.of(PetDto.StatusEnum.values())));

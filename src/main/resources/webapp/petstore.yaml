@@ -555,6 +555,7 @@ components:
     Pet:
       required:
         - name
+        - description
         - photoUrls
         - category
         - status
@@ -568,6 +569,8 @@ components:
         name:
           type: string
           example: doggie
+        description:
+          type: string
         photoUrls:
           type: array
           readOnly: true

@@ -110,7 +110,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>frr-typescript-fetch-api</id>
+                        <id>typescript-fetch-api</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -121,7 +121,7 @@
                             <output>target/generated-sources/generated-typescript</output>
                             <configOptions>
                                 <npmName>@jhannes/openapi-workshop</npmName>
-                                <npmVersion>1.0.0</npmVersion>
+                                <npmVersion>1.0.1</npmVersion>
                                 <npmRepository>https://npm.pkg.github.com</npmRepository>
                                 <supportsES6>true</supportsES6>
                                 <withInterfaces>true</withInterfaces>

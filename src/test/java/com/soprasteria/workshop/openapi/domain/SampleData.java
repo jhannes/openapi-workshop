@@ -12,6 +12,7 @@ public class SampleData {
     public Pet samplePet(Category category) {
         Pet pet = new Pet();
         pet.setName(randomName());
+        pet.setDescription(randomName() + " test");
         pet.setCategoryId(category.getId());
         pet.setStatus(pickOne(PetStatus.values()));
         return pet;

@@ -7,6 +7,7 @@ public class Pet {
     private UUID id;
     private UUID categoryId;
     private PetStatus status;
+    private String description;
 
     public String getName() {
         return name;
@@ -38,5 +39,13 @@ public class Pet {
 
     public void setStatus(PetStatus status) {
         this.status = status;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

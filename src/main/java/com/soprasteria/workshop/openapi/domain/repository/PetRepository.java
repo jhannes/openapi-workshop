@@ -51,6 +51,7 @@ public class PetRepository implements Repository<Pet> {
     public DatabaseSaveResult.SaveStatus save(Pet o) {
         DatabaseSaveResult<UUID> result = table.newSaveBuilderWithUUID("id", o.getId())
                 .setField("name", o.getName())
+                .setField("description", o.getDescription())
                 .setField("status", o.getStatus())
                 .setField("category_id", o.getCategoryId())
                 .execute();
@@ -79,6 +80,7 @@ public class PetRepository implements Repository<Pet> {
         Pet pet = new Pet();
         pet.setId(row.getUUID("id"));
         pet.setName(row.getString("name"));
+        pet.setDescription(row.getString("description"));
         pet.setStatus(row.getEnum(PetStatus.class, "status"));
         pet.setCategoryId(row.getUUID("category_id"));
         return pet;

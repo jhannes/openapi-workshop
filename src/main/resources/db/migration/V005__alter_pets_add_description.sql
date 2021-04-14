@@ -1,0 +1,1 @@
+alter table pets add column description varchar(1000);
