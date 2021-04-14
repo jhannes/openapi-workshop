@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import * as ReactDOM from "react-dom";
 import {
   activeDirectory,
@@ -18,28 +18,7 @@ import { useLocalStorage } from "./lib/useLocalStorage";
 import { LoginPage } from "./login/LoginPage";
 import { PetsPage } from "./pets";
 import { LoggedOutError } from "@jhannes/openapi-workshop/dist/base";
-
-function ListCategories() {
-  const {
-    apis: { petApi },
-  } = useContext(ApiContext);
-
-  const categories = useLoader(async () => await petApi.listCategories());
-
-  if (categories.loading) {
-    return <div>Loading...</div>;
-  }
-  if (categories.failed) {
-    return <div>Error: {categories.error.toString()}</div>;
-  }
-  return (
-    <ul>
-      {categories.data.map(({ id, name }) => (
-        <li key={id}>{name}</li>
-      ))}
-    </ul>
-  );
-}
+import { ListCategories } from "./categories/ListCategories";
 
 function ApplicationLoading() {
   return <div>Please wait</div>;

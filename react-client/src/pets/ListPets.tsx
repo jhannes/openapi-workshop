@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useContext, useState } from "react";
 import {
-  activeDirectory,
   PetDtoStatusDtoEnum,
   PetDtoStatusDtoEnumValues,
 } from "@jhannes/openapi-workshop";
