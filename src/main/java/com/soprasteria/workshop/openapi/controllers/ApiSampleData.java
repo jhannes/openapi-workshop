@@ -36,7 +36,6 @@ public class ApiSampleData {
 
     public PetDto samplePetDto() {
         return new PetDto()
-                .id(generator.randomUUID("pet", "id"))
                 .name(generator.randomString("pet", "name"))
                 .category(sampleCategoryDto())
                 .tags(generator.randomStringList("pet", "tags"))
