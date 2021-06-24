@@ -10,7 +10,7 @@ export function FormField({
 }) {
   return (
     <div>
-      <label>
+      <label data-label={label}>
         {label}: {children}
       </label>
     </div>

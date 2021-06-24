@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`categories views shows categories 1`] = `
+"<ul>
+  <li>Bird</li>
+</ul>"
+`;
+
+exports[`categories views shows errors 1`] = `"<div>Error: Error: Something went wrong</div>"`;

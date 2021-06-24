@@ -16,7 +16,7 @@ export function CheckboxList<T extends string>({
   return (
     <div>
       {values.map((value) => (
-        <label key={value}>
+        <label key={value} data-label={value}>
           <input
             type="checkbox"
             className="type"

@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pets screens shows errors on new pet screen 1`] = `
+"<div>
+  <h1>An error occurred</h1>
+  <div>Error: Something went wrong</div>
+</div>"
+`;
+
+exports[`pets screens shows errors on pet list 1`] = `
+"<div>
+  <h1>Show pets</h1><a href=\\"/pets/new\\"><button>Create new</button></a>
+  <div><label data-label=\\"available\\"><input type=\\"checkbox\\" class=\\"type\\">available</label><label data-label=\\"pending\\"><input type=\\"checkbox\\" class=\\"type\\">pending</label><label data-label=\\"sold\\"><input type=\\"checkbox\\" class=\\"type\\">sold</label></div>
+  <div>
+    <h1>An error occurred</h1>
+    <div>Error: Something went wrong</div>
+  </div>
+</div>"
+`;
+
+exports[`pets screens shows new pet screen 1`] = `
+"<div>
+  <h1>New pet</h1>
+  <form>
+    <fieldset>
+      <div><label data-label=\\"Name\\">Name: <input type=\\"text\\" value=\\"\\"></label></div>
+      <div><label data-label=\\"Status\\">Status: <select>
+            <option value=\\"available\\">available</option>
+            <option value=\\"pending\\">pending</option>
+            <option value=\\"sold\\">sold</option>
+          </select></label></div>
+      <div><label data-label=\\"Category\\">Category: <select>
+            <option value=\\"\\"></option>
+            <option value=\\"1f5d54bf-1673-4b10-b466-58e1485992f4\\">Bird</option>
+            <option value=\\"014bff84-2cb5-4bf4-bf03-7b3809222a7f\\">Bird</option>
+          </select></label></div><button>Submit</button>
+    </fieldset>
+  </form>
+</div>"
+`;
+
+exports[`pets screens shows pet list 1`] = `
+"<div>
+  <h1>Show pets</h1><a href=\\"/pets/new\\"><button>Create new</button></a>
+  <div><label data-label=\\"available\\"><input type=\\"checkbox\\" class=\\"type\\">available</label><label data-label=\\"pending\\"><input type=\\"checkbox\\" class=\\"type\\">pending</label><label data-label=\\"sold\\"><input type=\\"checkbox\\" class=\\"type\\">sold</label></div>
+  <div>
+    <div>Rocky</div>
+    <div>Buddy</div>
+    <div>Daisy</div>
+  </div>
+</div>"
+`;

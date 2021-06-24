@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { ApiContext } from "../applicationContext";
 import { useHistory } from "react-router";
 import {
@@ -29,19 +29,10 @@ export function NewPet() {
     return await petApi.listCategories();
   });
 
-  useEffect(() => {
-    console.log({ categoryId });
-  }, [categoryId]);
-
   const { handleSubmit, submitting, submitError } = useSubmit(
     async () => {
       return await petApi.addPet({
-        petDto: {
-          status,
-          category: { id: categoryId },
-          name,
-          tags,
-        },
+        petDto: { status, category: { id: categoryId }, name, tags },
         security,
       });
     },
