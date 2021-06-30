@@ -19,6 +19,7 @@ import { LoginPage } from "./login/LoginPage";
 import { PetsPage } from "./pets";
 import { LoggedOutError } from "@jhannes/openapi-workshop/dist/base";
 import { ListCategories } from "./categories/ListCategories";
+import { ProfilePage } from "./login/ProfilePage";
 
 function ApplicationLoading() {
   return <div>Please wait</div>;
@@ -27,8 +28,8 @@ function ApplicationLoading() {
 function Application() {
   const [access_token, setAccessToken] = useLocalStorage("access_token");
   const history = useHistory();
-  //const basePath = "http://localhost:8080/petstore/api";
-  const basePath = "https://openapi-workshop.azurewebsites.net/petstore/api";
+  const basePath = "http://localhost:8080/petstore/api";
+  //const basePath = "https://openapi-workshop.azurewebsites.net/petstore/api";
   const options = access_token
     ? {
         headers: {
@@ -98,6 +99,12 @@ function Application() {
             <LoginPage
               onComplete={handleLoginComplete}
               provider={identityProvider}
+            />
+          </Route>
+          <Route path={"/profile"}>
+            <ProfilePage
+              userInfo={userInfo.data}
+              onLogOut={() => setAccessToken(undefined)}
             />
           </Route>
           <Route>

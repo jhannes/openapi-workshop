@@ -13,6 +13,7 @@ import org.actioncontroller.ContentBody;
 import org.actioncontroller.ContentLocationHeader;
 import org.actioncontroller.DELETE;
 import org.actioncontroller.GET;
+import org.actioncontroller.HttpRequestException;
 import org.actioncontroller.POST;
 import org.actioncontroller.PUT;
 import org.actioncontroller.PathParam;
@@ -62,9 +63,9 @@ public class PetController {
             @UserPrincipal PetStoreUser user
     ) {
         if (!petDto.missingRequiredFields().isEmpty()) {
-            throw new IllegalArgumentException("Missing required fields " + petDto.missingRequiredFields());
+            throw new HttpRequestException("Missing required fields " + petDto.missingRequiredFields());
         }
-        
+
         Pet pet = fromDto(petDto);
         petRepository.save(pet);
         petRepository.saveTags(pet, petDto.getTags());
