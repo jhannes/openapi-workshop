@@ -21,9 +21,8 @@ export interface OpenIdConnectProvider {
 export const ApiContext = React.createContext<{
   apis: ApplicationApis;
   identityProvider: OpenIdConnectProvider;
-  security: activeDirectory;
+  security?: activeDirectory;
 }>({
   apis: servers.production,
   identityProvider,
-  security: new activeDirectory(""),
 });

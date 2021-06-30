@@ -1,5 +1,7 @@
 import * as React from "react";
+import { useApplicationTexts } from "../ApplicationTexts";
 
 export function LoadingView() {
-  return <div>Please wait</div>;
+  const { standardTexts: texts } = useApplicationTexts();
+  return <div>{texts.loading}</div>;
 }

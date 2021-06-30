@@ -1,15 +1,13 @@
 import * as React from "react";
 import { useContext, useState } from "react";
-import {
-  PetDtoStatusDtoEnum,
-  PetDtoStatusDtoEnumValues,
-} from "@jhannes/openapi-workshop";
+import { PetDtoStatusDtoEnum } from "@jhannes/openapi-workshop";
 import { ApiContext } from "../applicationContext";
 import { useLoader } from "../lib/useLoader";
 import { Link } from "react-router-dom";
 import { CheckboxList } from "../views/CheckboxList";
 import { LoadingView } from "../views/LoadingView";
 import { ErrorView } from "../views/ErrorView";
+import { useApplicationTexts } from "../ApplicationTexts";
 
 function ShowPetList({ statuses }: { statuses: PetDtoStatusDtoEnum[] }) {
   const {
@@ -40,16 +38,15 @@ function ShowPetList({ statuses }: { statuses: PetDtoStatusDtoEnum[] }) {
 export function ListPets() {
   const [statuses, setStatuses] = useState<PetDtoStatusDtoEnum[]>([]);
 
+  const { petstoreTexts: texts } = useApplicationTexts();
+
   return (
     <div>
-      <h1>Show pets</h1>
+      <h1>{texts.showPets}</h1>
       <Link to={"/pets/new"}>
-        <button>Create new</button>
+        <button>{texts.createPet}</button>
       </Link>
-      <CheckboxList
-        values={PetDtoStatusDtoEnumValues}
-        setValues={setStatuses}
-      />
+      <CheckboxList values={texts.statuses} setValues={setStatuses} />
       <ShowPetList statuses={statuses} />
     </div>
   );

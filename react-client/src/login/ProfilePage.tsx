@@ -1,32 +1,34 @@
 import * as React from "react";
 import { UserDto } from "@jhannes/openapi-workshop";
+import { AppLocale } from "../applicationLocale";
+import { getLanguages, useApplicationTexts } from "../ApplicationTexts";
 
 export function ProfilePage({
   userInfo,
+  setLocale,
   onLogOut,
 }: {
   userInfo: UserDto | null;
+  setLocale(value: AppLocale): void;
   onLogOut(): void;
 }) {
+  const { petstoreTexts: texts, languages } = useApplicationTexts();
   if (!userInfo) {
     return null;
   }
   return (
     <>
-      <h1>
-        Logged in as {userInfo.firstName} {userInfo.lastName}
-      </h1>
+      <h1>{texts.loggedIn(userInfo)}</h1>
       <div>
-        <button onClick={onLogOut}>Log out</button>
+        <button onClick={onLogOut}>{texts.actionLogout}</button>
       </div>
       <div>
-        <h2>Change language</h2>
-        <div>
-          <button>English</button>
-        </div>
-        <div>
-          <button>Norwegian</button>
-        </div>
+        <h2>{texts.changeLanguage}</h2>
+        {getLanguages(languages).map(({ locale, label }) => (
+          <button key={locale} onClick={() => setLocale(locale as AppLocale)}>
+            {label}
+          </button>
+        ))}
       </div>
     </>
   );

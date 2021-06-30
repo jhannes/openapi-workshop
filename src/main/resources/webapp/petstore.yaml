@@ -8,7 +8,7 @@ servers:
     description: localhost
 info:
   description: 'This is a sample server Petstore server used for OpenAPI training'
-  contact: 
+  contact:
     name: Github
     url: https://github.com/jhannes/openapi-workshop/
   version: 1.0.0
@@ -249,7 +249,7 @@ paths:
                   description: file to upload
                   type: string
                   format: binary
-              required: 
+              required:
                 - file
   /category:
     get:
@@ -258,12 +258,12 @@ paths:
       operationId: listCategories
       summary: Returns valid pet categories
       description: Returns a list of ids and names of categories
-      responses: 
+      responses:
         '200':
           description: successful operation
           content:
             application/json:
-              schema: 
+              schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Category'
@@ -540,7 +540,7 @@ components:
         phone:
           type: string
           format: phone
-      required: 
+      required:
         - username
         - firstName
         - lastName
@@ -608,6 +608,6 @@ components:
             - delivered
         complete:
           type: boolean
-      required: 
+      required:
         - petId
         - quantity

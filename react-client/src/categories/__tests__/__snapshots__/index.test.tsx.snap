@@ -6,4 +6,9 @@ exports[`categories views shows categories 1`] = `
 </ul>"
 `;
 
-exports[`categories views shows errors 1`] = `"<div>Error: Error: Something went wrong</div>"`;
+exports[`categories views shows errors 1`] = `
+"<div>
+  <h1>An error has occurred</h1>
+  <div>Error: Something went wrong</div>
+</div>"
+`;

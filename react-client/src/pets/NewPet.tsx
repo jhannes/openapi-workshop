@@ -23,7 +23,6 @@ export function NewPet() {
   const [status, setStatus] = useState<PetDtoStatusDtoEnum>("available");
   const [categoryId, setCategoryId] = useState("");
   const [name, setName] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
 
   const categories = useLoader(async () => {
     return await petApi.listCategories();
@@ -32,8 +31,8 @@ export function NewPet() {
   const { handleSubmit, submitting, submitError } = useSubmit(
     async () => {
       return await petApi.addPet({
-        petDto: { status, category: { id: categoryId }, name, tags },
-        security,
+        petDto: { status, category: { id: categoryId }, name },
+        security: security!,
       });
     },
     () => {

@@ -2,6 +2,8 @@ import * as React from "react";
 import { useContext } from "react";
 import { ApiContext } from "../applicationContext";
 import { useLoader } from "../lib/useLoader";
+import { LoadingView } from "../views/LoadingView";
+import { ErrorView } from "../views/ErrorView";
 
 export function ListCategories() {
   const {
@@ -11,10 +13,10 @@ export function ListCategories() {
   const categories = useLoader(async () => await petApi.listCategories());
 
   if (categories.loading) {
-    return <div>Loading...</div>;
+    return <LoadingView />;
   }
   if (categories.failed) {
-    return <div>Error: {categories.error.toString()}</div>;
+    return <ErrorView error={categories.error} />;
   }
   return (
     <ul>
