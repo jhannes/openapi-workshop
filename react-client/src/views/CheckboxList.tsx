@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import { LocaleContext } from "../applicationLocale";
+import { LocaleContext } from "../localization/applicationLocale";
 
 function Checkbox({
   checked,

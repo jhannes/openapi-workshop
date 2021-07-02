@@ -1,7 +1,7 @@
 import * as React from "react";
 import { UserDto } from "@jhannes/openapi-workshop";
-import { AppLocale } from "../applicationLocale";
-import { getLanguages, useApplicationTexts } from "../ApplicationTexts";
+import { AppLocale } from "../localization/applicationLocale";
+import { getLanguages, useApplicationTexts } from "../localization/";
 
 export function ProfilePage({
   userInfo,

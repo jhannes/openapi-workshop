@@ -29,7 +29,6 @@ describe("pets screens", () => {
     const petDto = {
       name: sampleData.samplePetDto().name,
       category: { id: categories[1].id },
-      tags: [],
       status: sampleData.samplePetDto().status,
     };
     const addPet = jest.fn();

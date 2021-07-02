@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useApplicationTexts } from "../ApplicationTexts";
+import { useApplicationTexts } from "../localization";
 
 export function ErrorView({ error }: { error: Error }) {
   const { standardTexts: texts } = useApplicationTexts();

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { CheckboxList } from "../views/CheckboxList";
 import { LoadingView } from "../views/LoadingView";
 import { ErrorView } from "../views/ErrorView";
-import { useApplicationTexts } from "../ApplicationTexts";
+import { useApplicationTexts } from "../localization";
 
 function ShowPetList({ statuses }: { statuses: PetDtoStatusDtoEnum[] }) {
   const {

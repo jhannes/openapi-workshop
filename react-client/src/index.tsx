@@ -20,8 +20,8 @@ import { PetsPage } from "./pets";
 import { LoggedOutError } from "@jhannes/openapi-workshop/dist/base";
 import { ListCategories } from "./categories/ListCategories";
 import { ProfilePage } from "./login/ProfilePage";
-import { AppLocale, LocaleContext } from "./applicationLocale";
-import { useApplicationTexts } from "./ApplicationTexts";
+import { AppLocale, LocaleContext } from "./localization/applicationLocale";
+import { useApplicationTexts } from "./localization";
 import { LoadingView } from "./views/LoadingView";
 
 function ApplicationFrame({
