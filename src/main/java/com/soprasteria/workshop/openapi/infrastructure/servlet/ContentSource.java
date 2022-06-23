@@ -1,6 +1,6 @@
 package com.soprasteria.workshop.openapi.infrastructure.servlet;
 
-import org.actioncontroller.ExceptionUtil;
+import org.actioncontroller.util.ExceptionUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+// TODO: Replace with implementation in action-controller
 public class ContentSource {
 
     private final URL resourceBase;

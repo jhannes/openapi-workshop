@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useState } from "react";
-import { PetDtoStatusDtoEnum } from "@jhannes/openapi-workshop";
+import { PetDtoStatusEnum } from "@jhannes/openapi-workshop";
 import { ApiContext } from "../applicationContext";
 import { useLoader } from "../lib/useLoader";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ import { LoadingView } from "../views/LoadingView";
 import { ErrorView } from "../views/ErrorView";
 import { useApplicationTexts } from "../localization";
 
-function ShowPetList({ statuses }: { statuses: PetDtoStatusDtoEnum[] }) {
+function ShowPetList({ statuses }: { statuses: PetDtoStatusEnum[] }) {
   const {
     apis: { petApi },
   } = useContext(ApiContext);
@@ -36,7 +36,7 @@ function ShowPetList({ statuses }: { statuses: PetDtoStatusDtoEnum[] }) {
 }
 
 export function ListPets() {
-  const [statuses, setStatuses] = useState<PetDtoStatusDtoEnum[]>([]);
+  const [statuses, setStatuses] = useState<PetDtoStatusEnum[]>([]);
 
   const { petstoreTexts: texts } = useApplicationTexts();
 

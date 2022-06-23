@@ -558,6 +558,7 @@ components:
         - photoUrls
         - category
         - status
+        - tags
       properties:
         id:
           type: string

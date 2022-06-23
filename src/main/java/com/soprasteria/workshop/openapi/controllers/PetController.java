@@ -9,18 +9,18 @@ import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
 import com.soprasteria.workshop.openapi.infrastructure.servlet.Multipart;
 import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
-import org.actioncontroller.ContentBody;
-import org.actioncontroller.ContentLocationHeader;
-import org.actioncontroller.DELETE;
-import org.actioncontroller.GET;
-import org.actioncontroller.HttpRequestException;
-import org.actioncontroller.POST;
-import org.actioncontroller.PUT;
-import org.actioncontroller.PathParam;
-import org.actioncontroller.RequestParam;
-import org.actioncontroller.ServletUrl;
-import org.actioncontroller.UserPrincipal;
-import org.actioncontroller.json.JsonBody;
+import org.actioncontroller.actions.DELETE;
+import org.actioncontroller.actions.GET;
+import org.actioncontroller.actions.POST;
+import org.actioncontroller.actions.PUT;
+import org.actioncontroller.exceptions.HttpRequestException;
+import org.actioncontroller.values.ContentBody;
+import org.actioncontroller.values.ContentLocationHeader;
+import org.actioncontroller.values.PathParam;
+import org.actioncontroller.values.RequestParam;
+import org.actioncontroller.values.ServletUrl;
+import org.actioncontroller.values.UserPrincipal;
+import org.actioncontroller.values.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
 import java.io.InputStream;
@@ -60,7 +60,7 @@ public class PetController {
     @ContentLocationHeader("/pet/{petId}")
     public UUID addPet(
             @JsonBody PetDto petDto,
-            @UserPrincipal PetStoreUser user
+            @UserPrincipal PetStoreUser ignoredUser
     ) {
         if (!petDto.missingRequiredFields().isEmpty()) {
             throw new HttpRequestException("Missing required fields " + petDto.missingRequiredFields());
@@ -78,7 +78,7 @@ public class PetController {
      * @param petId Pet id to delete (required)
      */
     @DELETE("/pet/{petId}")
-    public void deletePet(@PathParam("petId") UUID petId, @UserPrincipal PetStoreUser user) {
+    public void deletePet(@PathParam("petId") UUID petId, @UserPrincipal PetStoreUser ignoredUser) {
         petRepository.delete(petRepository.retrieve(petId));
     }
 
@@ -141,7 +141,7 @@ public class PetController {
     public void updatePet(
             @PathParam("petId") UUID petId,
             @JsonBody PetDto petDto,
-            @UserPrincipal PetStoreUser user
+            @UserPrincipal PetStoreUser ignoredUser
     ) {
         Pet pet = petRepository.retrieve(petId);
         pet.setName(petDto.getName());
@@ -167,7 +167,7 @@ public class PetController {
             @PathParam("petId") UUID petId,
             @RequestParam("name") Optional<String> name,
             @RequestParam("status") Optional<String> status,
-            @UserPrincipal PetStoreUser user
+            @UserPrincipal PetStoreUser ignoredUser
     ) {
         Pet pet = petRepository.retrieve(petId);
         name.ifPresent(pet::setName);
@@ -187,7 +187,7 @@ public class PetController {
             @PathParam("petId") UUID petId,
             @Multipart("file") InputStream fileContent,
             @Multipart.Filename("file") String fileName,
-            @UserPrincipal PetStoreUser user
+            @UserPrincipal PetStoreUser ignoredUser
 
     ) {
         Pet pet = petRepository.retrieve(petId);

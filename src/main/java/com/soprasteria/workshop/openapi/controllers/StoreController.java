@@ -4,12 +4,12 @@ import com.soprasteria.workshop.openapi.domain.Order;
 import com.soprasteria.workshop.openapi.domain.OrderStatus;
 import com.soprasteria.workshop.openapi.domain.repository.OrderRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.OrderDto;
-import org.actioncontroller.ContentLocationHeader;
-import org.actioncontroller.DELETE;
-import org.actioncontroller.GET;
-import org.actioncontroller.POST;
-import org.actioncontroller.PathParam;
-import org.actioncontroller.json.JsonBody;
+import org.actioncontroller.actions.DELETE;
+import org.actioncontroller.actions.GET;
+import org.actioncontroller.actions.POST;
+import org.actioncontroller.values.ContentLocationHeader;
+import org.actioncontroller.values.PathParam;
+import org.actioncontroller.values.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
 import java.util.Map;

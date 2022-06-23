@@ -2,7 +2,7 @@ package com.soprasteria.workshop.openapi.infrastructure.servlet;
 
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import org.actioncontroller.ExceptionUtil;
+import org.actioncontroller.util.ExceptionUtil;
 import org.eclipse.jetty.security.DefaultUserIdentity;
 import org.eclipse.jetty.security.UserAuthentication;
 import org.eclipse.jetty.server.Authentication;
@@ -23,7 +23,7 @@ import java.security.Principal;
 public class OpenIdConnectAuthentication implements Authentication.Deferred {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenIdConnectAuthentication.class);
-    
+
     @Override
     public Authentication authenticate(ServletRequest request) {
         Request req = (Request) request;

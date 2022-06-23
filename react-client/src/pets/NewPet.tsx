@@ -3,8 +3,8 @@ import { useContext, useState } from "react";
 import { ApiContext } from "../applicationContext";
 import { useHistory } from "react-router";
 import {
-  PetDtoStatusDtoEnum,
-  PetDtoStatusDtoEnumValues,
+  PetDtoStatusEnum,
+  PetDtoStatusEnumValues,
 } from "@jhannes/openapi-workshop";
 import { useLoader } from "../lib/useLoader";
 import { useSubmit } from "../lib/useSubmit";
@@ -20,7 +20,7 @@ export function NewPet() {
   } = useContext(ApiContext);
   const history = useHistory();
 
-  const [status, setStatus] = useState<PetDtoStatusDtoEnum>("available");
+  const [status, setStatus] = useState<PetDtoStatusEnum>("available");
   const [categoryId, setCategoryId] = useState("");
   const [name, setName] = useState("");
 
@@ -56,9 +56,9 @@ export function NewPet() {
           <FormField label={"Status"}>
             <select
               value={status}
-              onChange={(e) => setStatus(e.target.value as PetDtoStatusDtoEnum)}
+              onChange={(e) => setStatus(e.target.value as PetDtoStatusEnum)}
             >
-              {PetDtoStatusDtoEnumValues.map((value) => (
+              {PetDtoStatusEnumValues.map((value) => (
                 <option key={value} value={value}>
                   {value}
                 </option>

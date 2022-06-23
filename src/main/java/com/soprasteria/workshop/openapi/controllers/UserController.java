@@ -5,17 +5,17 @@ import com.soprasteria.workshop.openapi.domain.repository.UserRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
 import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
-import org.actioncontroller.ContentLocationHeader;
-import org.actioncontroller.DELETE;
-import org.actioncontroller.GET;
-import org.actioncontroller.HttpUnauthorizedException;
-import org.actioncontroller.POST;
-import org.actioncontroller.PUT;
-import org.actioncontroller.PathParam;
-import org.actioncontroller.RequestParam;
-import org.actioncontroller.SessionParameter;
-import org.actioncontroller.UserPrincipal;
-import org.actioncontroller.json.JsonBody;
+import org.actioncontroller.actions.DELETE;
+import org.actioncontroller.actions.GET;
+import org.actioncontroller.actions.POST;
+import org.actioncontroller.actions.PUT;
+import org.actioncontroller.exceptions.HttpUnauthorizedException;
+import org.actioncontroller.values.ContentLocationHeader;
+import org.actioncontroller.values.PathParam;
+import org.actioncontroller.values.RequestParam;
+import org.actioncontroller.values.SessionParameter;
+import org.actioncontroller.values.UserPrincipal;
+import org.actioncontroller.values.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
 import java.util.List;
@@ -85,7 +85,7 @@ public class UserController {
                 .map(this::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("User", username));
     }
-    
+
     /**
      * Get user by user name
      */

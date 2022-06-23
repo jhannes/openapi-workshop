@@ -20,43 +20,43 @@
         <!-- Override this in your settings.xml file or run mvn -Dazure.appName=...-->
         <openapiWorkshop.azure.appName>${project.artifactId}-${user.name}</openapiWorkshop.azure.appName>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>swagger-ui</artifactId>
-            <version>3.45.0</version>
+            <version>4.11.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>11.0.1</version>
+            <version>11.0.9</version>
         </dependency>
         <dependency>
             <groupId>org.logevents</groupId>
             <artifactId>logevents</artifactId>
-            <version>0.1.38</version>
+            <version>0.3.3</version>
         </dependency>
         <dependency>
             <groupId>io.github.jhannes</groupId>
             <artifactId>action-controller</artifactId>
-            <version>0.0.32</version>
+            <version>0.0.39</version>
         </dependency>
         <dependency>
             <groupId>org.jsonbuddy</groupId>
             <artifactId>jsonbuddy</artifactId>
-            <version>0.17</version>
+            <version>0.18.1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.6.2</version>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.github.jhannes</groupId>
             <artifactId>fluent-jdbc</artifactId>
-            <version>0.2.1</version>
+            <version>0.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>7.1.1</version>
+            <version>8.5.12</version>
         </dependency>
         <dependency>
             <groupId>org.mindrot</groupId>
@@ -76,12 +76,12 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
+            <version>5.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>9.2.1.jre11</version>
+            <version>10.2.1.jre11</version>
         </dependency>
     </dependencies>
 
@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>4.3.1</version>
+                <version>5.4.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -100,8 +100,8 @@
                             <inputSpec>${project.basedir}/src/main/resources/webapp/petstore.yaml</inputSpec>
                             <generatorName>java-annotationfree</generatorName>
                             <generateApis>false</generateApis>
-                            <generateSupportingFiles>false</generateSupportingFiles>
-                            <generateModelTests>false</generateModelTests>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+                            <generateModelTests>true</generateModelTests>
                             <modelPackage>com.soprasteria.workshop.openapi.generated.petstore</modelPackage>
                             <modelNameSuffix>Dto</modelNameSuffix>
                             <configOptions>
@@ -121,7 +121,7 @@
                             <output>target/generated-sources/generated-typescript</output>
                             <configOptions>
                                 <npmName>@jhannes/openapi-workshop</npmName>
-                                <npmVersion>1.0.0</npmVersion>
+                                <npmVersion>1.1.0</npmVersion>
                                 <npmRepository>https://npm.pkg.github.com</npmRepository>
                                 <supportsES6>true</supportsES6>
                                 <withInterfaces>true</withInterfaces>
@@ -134,12 +134,12 @@
                     <dependency>
                         <groupId>io.github.jhannes.openapi</groupId>
                         <artifactId>openapi-generator-typescript-fetch-api</artifactId>
-                        <version>0.2.0</version>
+                        <version>0.2.8</version>
                     </dependency>
                     <dependency>
                         <groupId>io.github.jhannes.openapi</groupId>
                         <artifactId>openapi-generator-java-annotationfree</artifactId>
-                        <version>0.1.2</version>
+                        <version>0.3.4</version>
                     </dependency>
                 </dependencies>
             </plugin>

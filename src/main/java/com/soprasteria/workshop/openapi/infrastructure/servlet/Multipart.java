@@ -3,12 +3,12 @@ package com.soprasteria.workshop.openapi.infrastructure.servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Part;
 import org.actioncontroller.ApiControllerContext;
-import org.actioncontroller.ExceptionUtil;
+import org.actioncontroller.ApiHttpExchange;
 import org.actioncontroller.jakarta.JakartaServletHttpExchange;
-import org.actioncontroller.meta.ApiHttpExchange;
 import org.actioncontroller.meta.HttpParameterMapper;
 import org.actioncontroller.meta.HttpParameterMapperFactory;
 import org.actioncontroller.meta.HttpParameterMapping;
+import org.actioncontroller.util.ExceptionUtil;
 
 import java.io.IOException;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-import { PetDtoStatusDtoEnum } from "@jhannes/openapi-workshop";
+import { PetDtoStatusEnum } from "@jhannes/openapi-workshop";
 import { AppLocale } from "./applicationLocale";
 
 export interface ApplicationTexts {
@@ -15,7 +15,7 @@ export interface ApplicationTexts {
     createPet: string;
     notFound: string;
     showPets: string;
-    statuses: Record<PetDtoStatusDtoEnum, string>;
+    statuses: Record<PetDtoStatusEnum, string>;
     loggedIn(args: { firstName: string; lastName: string }): string;
   };
   languages: Record<AppLocale, string>;
