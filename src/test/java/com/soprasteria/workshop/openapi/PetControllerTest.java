@@ -7,7 +7,7 @@ import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
-import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.infrastructure.repository.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -45,7 +45,7 @@ class PetControllerTest extends AbstractDatabaseTest {
         sampleCategory = new CategoryDto().id(sampleData.pickOneFromList(controller.listCategories()).getId());
         apiSampleData = new ApiSampleData(testInfo.getTestMethod());
     }
-    
+
     @Test
     void shouldRetrieveSavedPet() {
         CategoryDto category = sampleData.pickOneFromList(controller.listCategories());
@@ -56,7 +56,7 @@ class PetControllerTest extends AbstractDatabaseTest {
 
         assertThat(controller.getPetById(petId, servletUrl)).usingRecursiveComparison().isEqualTo(petDto);
     }
-    
+
     @Test
     void throwsOnNotFound() {
         assertThatThrownBy(() -> controller.getPetById(UUID.randomUUID(), servletUrl)).isInstanceOf(EntityNotFoundException.class);
@@ -67,18 +67,18 @@ class PetControllerTest extends AbstractDatabaseTest {
         controller.addPet(samplePet().name("Available").status(AVAILABLE), user);
         controller.addPet(samplePet().name("Pending").status(PENDING), user);
         controller.addPet(samplePet().name("Sold").status(SOLD), user);
-        
+
         assertThat(controller.findPetsByStatus(Optional.of(List.of(AVAILABLE, PENDING)), servletUrl))
                 .extracting(PetDto::getName)
                 .contains("Available", "Pending")
                 .doesNotContain("Sold");
     }
-    
+
     @Test
     void shouldDeletePet() {
         UUID petId = controller.addPet(samplePet().name("To be deleted"), user);
         controller.addPet(samplePet().name("To be retained"), user);
-        
+
         controller.deletePet(petId, user);
         assertThat(controller.findPetsByStatus(Optional.empty(), servletUrl))
                 .extracting(PetDto::getName)
@@ -100,18 +100,18 @@ class PetControllerTest extends AbstractDatabaseTest {
                 .usingRecursiveComparison()
                 .isEqualTo(updatedPet);
     }
-    
+
     @Test
     void shouldUpdatePetWithForm() {
         UUID petId = controller.addPet(samplePet().name("To be updated"), user);
-        
+
         controller.updatePetWithForm(petId, Optional.of("New Name"), Optional.empty(), user);
         assertThat(controller.getPetById(petId, servletUrl).getName()).isEqualTo("New Name");
 
         controller.updatePetWithForm(petId, Optional.empty(), Optional.of(PENDING.getValue()), user);
         assertThat(controller.getPetById(petId, servletUrl).getStatus()).isEqualTo(PENDING);
     }
-    
+
     @Test
     void uploadImage() throws IOException {
         UUID petId = controller.addPet(samplePet().name("To be updated"), user);
@@ -123,12 +123,12 @@ class PetControllerTest extends AbstractDatabaseTest {
         controller.getImage(fileId).transferTo(buffer);
         assertThat(buffer.toByteArray()).isEqualTo(redDot);
     }
-    
+
     @Test
     void shouldFindPetsByTags() {
         UUID pet1Id = controller.addPet(samplePet().tags(List.of("tag1", "tag2")), user);
         UUID pet2Id = controller.addPet(samplePet().tags(List.of("tag2", "tag3")), user);
-        
+
         assertThat(controller.findPetsByTags(List.of("tag1"), servletUrl)).extracting(PetDto::getId)
                 .contains(pet1Id).doesNotContain(pet2Id);
         assertThat(controller.findPetsByTags(List.of("tag2"), servletUrl)).extracting(PetDto::getId)

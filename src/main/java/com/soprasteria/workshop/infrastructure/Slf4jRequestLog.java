@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi.infrastructure;
+package com.soprasteria.workshop.infrastructure;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.eclipse.jetty.server.Request;
@@ -21,7 +21,7 @@ public class Slf4jRequestLog implements RequestLog {
     private static final Marker REDIRECT = MarkerFactory.getMarker("HTTP_REDIRECT");
     private static final Marker NOT_MODIFIED = MarkerFactory.getMarker("HTTP_NOT_MODIFIED");
     private static final Marker STATUS = MarkerFactory.getMarker("HTTP_STATUS_REQUEST");
-    
+
     static {
         HTTP_ERROR.add(HTTP);
         ASSET.add(HTTP);

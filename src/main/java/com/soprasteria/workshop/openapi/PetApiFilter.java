@@ -1,8 +1,8 @@
 package com.soprasteria.workshop.openapi;
 
-import com.soprasteria.workshop.openapi.infrastructure.Slf4jRequestLog;
-import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
-import com.soprasteria.workshop.openapi.infrastructure.servlet.OpenIdConnectAuthentication;
+import com.soprasteria.workshop.infrastructure.Slf4jRequestLog;
+import com.soprasteria.workshop.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.infrastructure.servlet.OpenIdConnectAuthentication;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +13,6 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
-import org.h2.jdbcx.JdbcDataSource;
 import org.slf4j.MDC;
 
 import javax.sql.DataSource;
@@ -36,15 +35,15 @@ public class PetApiFilter implements Filter {
         MDC.put("request", Slf4jRequestLog.getRequest(req));
         MDC.put("remoteAddress", req.getRemoteAddr());
         resp.setHeader("Access-Control-Allow-Origin", "*");
-        
+
         if (req.getMethod().equals("OPTIONS")) {
             resp.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
             resp.setStatus(204);
             return;
         }
-        
+
         req.setAuthentication(new OpenIdConnectAuthentication());
-        
+
         try (DbContextConnection ignored = dbContext.startConnection(getDataSource())) {
             chain.doFilter(request, response);
         } catch (EntityNotFoundException e) {

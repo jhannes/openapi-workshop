@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi.infrastructure.servlet;
+package com.soprasteria.workshop.infrastructure.servlet;
 
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;

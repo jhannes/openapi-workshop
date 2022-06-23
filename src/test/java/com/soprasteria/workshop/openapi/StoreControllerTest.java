@@ -8,7 +8,7 @@ import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
 import com.soprasteria.workshop.openapi.domain.repository.PetRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.OrderDto;
-import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.infrastructure.repository.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -42,7 +42,7 @@ class StoreControllerTest extends AbstractDatabaseTest {
         assertThat(controller.getOrderById(orderId))
                 .isEqualToIgnoringGivenFields(orderDto, "id");
     }
-    
+
     @Test
     void shouldDeleteOrder() {
         Category category = new Category("fish");
@@ -54,7 +54,7 @@ class StoreControllerTest extends AbstractDatabaseTest {
         UUID id = controller.placeOrder(orderDto);
         controller.deleteOrder(id);
         assertThatThrownBy(() -> controller.getOrderById(id)).isInstanceOf(EntityNotFoundException.class);
-        assertThatThrownBy(() -> controller.deleteOrder(id)).isInstanceOf(EntityNotFoundException.class);         
+        assertThatThrownBy(() -> controller.deleteOrder(id)).isInstanceOf(EntityNotFoundException.class);
     }
-    
+
 }

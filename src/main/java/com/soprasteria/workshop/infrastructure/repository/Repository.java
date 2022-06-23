@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi.infrastructure.repository;
+package com.soprasteria.workshop.infrastructure.repository;
 
 import org.fluentjdbc.DatabaseSaveResult;
 
@@ -11,6 +11,6 @@ public interface Repository<T> {
     T retrieve(UUID id);
 
     Query<T> query();
-    
+
     void delete(T o);
 }

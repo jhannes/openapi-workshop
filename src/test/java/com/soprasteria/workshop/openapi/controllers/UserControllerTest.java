@@ -3,7 +3,7 @@ package com.soprasteria.workshop.openapi.controllers;
 import com.soprasteria.workshop.openapi.TestPetStoreUser;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
-import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
+import com.soprasteria.workshop.infrastructure.servlet.PetStoreUser;
 import org.actioncontroller.HttpUnauthorizedException;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +37,7 @@ class UserControllerTest extends AbstractDatabaseTest {
                 .firstName("Newfirst").lastName("Newlast")
                 .phone("5559876")
         );
-        
+
         assertThat(controller.getUserByName(username))
                 .usingRecursiveComparison()
                 .isEqualTo(new UserDto()
@@ -46,14 +46,14 @@ class UserControllerTest extends AbstractDatabaseTest {
                         .firstName("Newfirst").lastName("Newlast")
                         .phone("5559876"));
     }
-    
+
     @Test
     void shouldLogUserIn() {
         PetStoreUser petStoreUser = new TestPetStoreUser();
         assertThat(controller.getCurrentUser(petStoreUser).getUsername())
                 .isEqualTo("myName");
     }
-    
+
     @Test
     void shouldLogRequireCorrectPassword() {
         UserDto user = apiSampleData.sampleUserDto()

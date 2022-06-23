@@ -2,9 +2,9 @@ package com.soprasteria.workshop.openapi.domain.repository;
 
 import com.soprasteria.workshop.openapi.domain.Order;
 import com.soprasteria.workshop.openapi.domain.OrderStatus;
-import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
-import com.soprasteria.workshop.openapi.infrastructure.repository.Query;
-import com.soprasteria.workshop.openapi.infrastructure.repository.Repository;
+import com.soprasteria.workshop.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.infrastructure.repository.Query;
+import com.soprasteria.workshop.infrastructure.repository.Repository;
 import org.fluentjdbc.DatabaseRow;
 import org.fluentjdbc.DatabaseSaveResult;
 import org.fluentjdbc.DbContext;
@@ -55,7 +55,7 @@ public class OrderRepository implements Repository<Order> {
         order.setOrderStatus(row.getEnum(OrderStatus.class,"order_status"));
         return order;
     }
-    
+
     @Override
     public void delete(Order order) {
         table.where("id", order.getId()).executeDelete();

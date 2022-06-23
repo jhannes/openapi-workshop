@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi.infrastructure.repository;
+package com.soprasteria.workshop.infrastructure.repository;
 
 import java.util.UUID;
 

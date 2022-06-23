@@ -1,4 +1,4 @@
-package com.soprasteria.workshop.openapi.infrastructure.servlet;
+package com.soprasteria.workshop.infrastructure.servlet;
 
 public interface PetStoreUser {
     String getName();

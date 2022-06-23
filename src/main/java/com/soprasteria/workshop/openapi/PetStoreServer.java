@@ -1,6 +1,6 @@
 package com.soprasteria.workshop.openapi;
 
-import com.soprasteria.workshop.openapi.infrastructure.Slf4jRequestLog;
+import com.soprasteria.workshop.infrastructure.Slf4jRequestLog;
 import jakarta.servlet.ServletContextListener;
 import org.actioncontroller.config.ConfigObserver;
 import org.eclipse.jetty.http.MimeTypes;
@@ -23,9 +23,9 @@ import java.net.URI;
 import java.util.Optional;
 
 public class PetStoreServer {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(PetStoreServer.class);
-    
+
     private final Server server = new Server();
     private final ServerConnector connector = new ServerConnector(server);
     private final DbContext context = new DbContext();

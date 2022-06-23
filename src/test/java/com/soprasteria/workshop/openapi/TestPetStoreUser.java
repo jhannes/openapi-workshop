@@ -1,6 +1,6 @@
 package com.soprasteria.workshop.openapi;
 
-import com.soprasteria.workshop.openapi.infrastructure.servlet.PetStoreUser;
+import com.soprasteria.workshop.infrastructure.servlet.PetStoreUser;
 
 public class TestPetStoreUser implements PetStoreUser {
     @Override

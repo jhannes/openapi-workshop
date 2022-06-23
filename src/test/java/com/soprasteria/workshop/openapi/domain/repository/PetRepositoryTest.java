@@ -3,7 +3,7 @@ package com.soprasteria.workshop.openapi.domain.repository;
 import com.soprasteria.workshop.openapi.domain.Category;
 import com.soprasteria.workshop.openapi.domain.Pet;
 import com.soprasteria.workshop.openapi.domain.PetEntity;
-import com.soprasteria.workshop.openapi.infrastructure.repository.EntityNotFoundException;
+import com.soprasteria.workshop.infrastructure.repository.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,19 +25,19 @@ class PetRepositoryTest extends AbstractDatabaseTest {
         this.category = sampleData.sampleCategory();
         new CategoryRepository(dbContext).save(category);
     }
-    
+
     @Test
     void shouldListSavedPets() {
         Pet pet1 = sampleData.samplePet(category);
         Pet pet2 = sampleData.samplePet(category);
         repository.save(pet1);
         repository.save(pet2);
-        
+
         assertThat(repository.query().stream())
                 .extracting(Pet::getName)
                 .contains(pet1.getName(), pet2.getName());
     }
-    
+
     @Test
     void shouldRetrievePetProperties() {
         Pet pet = sampleData.samplePet(category);
@@ -47,7 +47,7 @@ class PetRepositoryTest extends AbstractDatabaseTest {
                 .usingRecursiveComparison()
                 .isEqualTo(pet);
     }
-    
+
     @Test
     void shouldThrowOnUnknownId() {
         UUID id = UUID.randomUUID();
@@ -55,7 +55,7 @@ class PetRepositoryTest extends AbstractDatabaseTest {
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("Not found Pet with id " + id);
     }
-    
+
     @Test
     void shouldRetrievePetEntity() {
         Pet pet = sampleData.samplePet(category);
