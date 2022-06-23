@@ -3,15 +3,15 @@ package com.soprasteria.workshop.openapi;
 import com.soprasteria.workshop.openapi.controllers.PetController;
 import com.soprasteria.workshop.openapi.controllers.StoreController;
 import com.soprasteria.workshop.openapi.controllers.UserController;
-import com.soprasteria.workshop.openapi.infrastructure.servlet.ContentServlet;
-import com.soprasteria.workshop.openapi.infrastructure.servlet.ContentSource;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.ServletRegistration;
+import org.actioncontroller.content.ContentSource;
 import org.actioncontroller.jakarta.ApiJakartaServlet;
+import org.actioncontroller.jakarta.ContentServlet;
 import org.fluentjdbc.DbContext;
 
 import javax.sql.DataSource;
@@ -20,7 +20,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class PetStoreApplication implements ServletContextListener {
-    
+
     private final PetController petController;
     private final StoreController storeController;
     private final UserController userController;
@@ -49,7 +49,7 @@ public class PetStoreApplication implements ServletContextListener {
         context.addServlet("content", new ContentServlet(ContentSource.fromWebJar("swagger-ui")))
                 .addMapping("/swagger-ui/*");
         context.addServlet("swagger-ui", new ContentServlet("/webapp/")).addMapping("/*");
-        
+
         context.addFilter("apiFilter", filter)
                 .addMappingForServletNames(EnumSet.of(DispatcherType.REQUEST), false, "api");
     }
