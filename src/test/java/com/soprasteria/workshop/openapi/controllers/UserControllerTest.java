@@ -4,7 +4,7 @@ import com.soprasteria.workshop.openapi.TestPetStoreUser;
 import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
 import com.soprasteria.workshop.infrastructure.servlet.PetStoreUser;
-import org.actioncontroller.HttpUnauthorizedException;
+import org.actioncontroller.exceptions.HttpUnauthorizedException;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
