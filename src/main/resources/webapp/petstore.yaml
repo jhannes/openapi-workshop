@@ -11,7 +11,7 @@ info:
   contact:
     name: Github
     url: https://github.com/jhannes/openapi-workshop/
-  version: 1.0.0
+  version: 1.1.0
   title: OpenAPI Petstore
   license:
     name: Apache-2.0

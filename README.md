@@ -57,3 +57,11 @@ It has a few helper functions:
 ## Java backend
 
 The Java backend is created as a self-contained Jetty-server which implements the Petstore sample app. The controllers are implemented with [action-controller](https://github.com/jhannes/action-controller) and the database interaction with [fluent-jdbc](https://github.com/jhannes/fluent-jdbc). The Java DTOs are generated using [openapi-generator-java-annotationfree](https://github.com/jhannes/openapi-generator-java-annotationfree). The serialization is done with [jsonbuddy](https://github.com/anders88/jsonbuddy)
+
+### Deployment
+
+Requires Azure Account and [Azure CLI tools](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+1. Login to Azure CLI: `az login`
+2. Deploy to your personal AppService: `mvn azure-webapp:deploy`
+3Deploy production: `mvn azure-webapp:deploy -DopenapiWorkshop.azure.appName=openapi-workshop`
