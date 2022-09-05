@@ -1,8 +1,8 @@
 import { act, Simulate } from "react-dom/test-utils";
 import { ListPets } from "../ListPets";
 import * as React from "react";
-import { activeDirectory } from "@jhannes/openapi-workshop";
-import { mockPetApi } from "@jhannes/openapi-workshop/dist/test/apiTest";
+import { activeDirectory } from "../../generated";
+import { mockPetApi } from "../../generated/test/apiTest";
 import { NewPet } from "../NewPet";
 import {
   renderApplication,
@@ -25,11 +25,12 @@ describe("pets screens", () => {
 
   it("submits new pet", async () => {
     const sampleData = testData(200);
-    const categories = sampleData.sampleArrayCategoryDto();
+    const categories = sampleData.sampleArrayCategoryDto(4);
     const petDto = {
       name: sampleData.samplePetDto().name,
       category: { id: categories[1].id },
       status: sampleData.samplePetDto().status,
+      tags: [],
     };
     const addPet = jest.fn();
     const security = new activeDirectory(sampleData.uuidv4());

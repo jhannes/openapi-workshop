@@ -1,4 +1,4 @@
-import { PetDtoStatusEnum } from "@jhannes/openapi-workshop";
+import { PetDtoStatusEnum } from "../generated";
 import { AppLocale } from "./applicationLocale";
 
 export interface ApplicationTexts {

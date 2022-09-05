@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UserDto } from "@jhannes/openapi-workshop";
+import { UserDto } from "../generated";
 import { AppLocale } from "../localization/applicationLocale";
 import { getLanguages, useApplicationTexts } from "../localization/";
 

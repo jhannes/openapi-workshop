@@ -31,8 +31,7 @@ exports[`pets screens shows new pet screen 1`] = `
           </select></label></div>
       <div><label data-label=\\"Category\\">Category: <select>
             <option value=\\"\\"></option>
-            <option value=\\"1f5d54bf-1673-4b10-b466-58e1485992f4\\">Bird</option>
-            <option value=\\"014bff84-2cb5-4bf4-bf03-7b3809222a7f\\">Bird</option>
+            <option value=\\"f5d54bf1-673b-410f-8665-8e1485992f4a\\">Cat</option>
           </select></label></div><button>Submit</button>
     </fieldset>
   </form>
@@ -44,9 +43,8 @@ exports[`pets screens shows pet list 1`] = `
   <h1>Show pets</h1><a href=\\"/pets/new\\"><button>Create pet</button></a>
   <div><label data-label=\\"available\\"><input type=\\"checkbox\\" class=\\"type\\">Available</label><label data-label=\\"pending\\"><input type=\\"checkbox\\" class=\\"type\\">Pending</label><label data-label=\\"sold\\"><input type=\\"checkbox\\" class=\\"type\\">Sold</label></div>
   <div>
+    <div>Chase</div>
     <div>Rocky</div>
-    <div>Buddy</div>
-    <div>Daisy</div>
   </div>
 </div>"
 `;

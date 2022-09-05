@@ -25,7 +25,7 @@ export function useLoader<T>(
         });
       } catch (error) {
         console.warn(error);
-        setState({ failed: true, loading: false, error });
+        setState({ failed: true, loading: false, error: error as Error });
       }
     })();
   }, deps);

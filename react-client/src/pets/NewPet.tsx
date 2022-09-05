@@ -2,10 +2,7 @@ import * as React from "react";
 import { useContext, useState } from "react";
 import { ApiContext } from "../applicationContext";
 import { useHistory } from "react-router";
-import {
-  PetDtoStatusEnum,
-  PetDtoStatusEnumValues,
-} from "@jhannes/openapi-workshop";
+import { PetDtoStatusEnum, PetDtoStatusEnumValues } from "../generated";
 import { useLoader } from "../lib/useLoader";
 import { useSubmit } from "../lib/useSubmit";
 import { LoadingView } from "../views/LoadingView";
@@ -31,7 +28,7 @@ export function NewPet() {
   const { handleSubmit, submitting, submitError } = useSubmit(
     async () => {
       return await petApi.addPet({
-        petDto: { status, category: { id: categoryId }, name },
+        petDto: { status, category: { id: categoryId }, name, tags: [] },
         security: security!,
       });
     },

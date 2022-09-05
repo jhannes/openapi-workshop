@@ -2,15 +2,14 @@ import * as React from "react";
 import { ReactElement, ReactNode } from "react";
 import { act, Simulate } from "react-dom/test-utils";
 import ReactDOM from "react-dom";
-import { ApplicationApis } from "@jhannes/openapi-workshop/dist/api";
-import { activeDirectory } from "@jhannes/openapi-workshop";
-import { mockApplicationApis } from "@jhannes/openapi-workshop/dist/test/apiTest";
+import { activeDirectory, ApplicationApis } from "../generated";
+import { mockApplicationApis } from "../generated/test/apiTest";
 import { ApiContext, identityProvider } from "../applicationContext";
 import { MemoryRouter } from "react-router";
 import {
   SampleModelFactories,
   TestSampleData,
-} from "@jhannes/openapi-workshop/dist/test/modelTest";
+} from "../generated/test/modelTest";
 
 export async function render(component: ReactElement) {
   const container = document.createElement("div");

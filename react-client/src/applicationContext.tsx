@@ -1,9 +1,5 @@
 import * as React from "react";
-import {
-  ApplicationApis,
-  activeDirectory,
-  servers,
-} from "@jhannes/openapi-workshop";
+import { ApplicationApis, activeDirectory, servers } from "./generated";
 
 export const identityProvider = {
   openIdConnectUrl:

@@ -124,11 +124,8 @@
                             <inputSpec>${project.basedir}/src/main/resources/webapp/petstore.yaml</inputSpec>
                             <generatorName>typescript-fetch-api</generatorName>
                             <modelNameSuffix>Dto</modelNameSuffix>
-                            <output>target/generated-sources/generated-typescript</output>
+                            <output>react-client/src/generated</output>
                             <configOptions>
-                                <npmName>@jhannes/openapi-workshop</npmName>
-                                <npmVersion>1.1.0</npmVersion>
-                                <npmRepository>https://npm.pkg.github.com</npmRepository>
                                 <supportsES6>true</supportsES6>
                                 <withInterfaces>true</withInterfaces>
                                 <generateModelTests>true</generateModelTests>
@@ -140,7 +137,7 @@
                     <dependency>
                         <groupId>io.github.jhannes.openapi</groupId>
                         <artifactId>openapi-generator-typescript-fetch-api</artifactId>
-                        <version>0.3.2</version>
+                        <version>0.3.3</version>
                     </dependency>
                     <dependency>
                         <groupId>io.github.jhannes.openapi</groupId>

@@ -1,4 +1,4 @@
-import { HttpError } from "@jhannes/openapi-workshop/dist/base";
+import { HttpError } from "../generated/base";
 
 export async function fetchJson(
   url: string,

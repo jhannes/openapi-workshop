@@ -2,7 +2,7 @@ import { renderApplication, testData } from "../../__mocks__/applicationTest";
 import { ListCategories } from "../ListCategories";
 import pretty from "pretty";
 import React from "react";
-import { mockPetApi } from "@jhannes/openapi-workshop/dist/test/apiTest";
+import { mockPetApi } from "../../generated/test/apiTest";
 
 describe("categories views", () => {
   it("shows categories", async () => {

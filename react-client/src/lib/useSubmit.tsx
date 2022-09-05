@@ -17,7 +17,7 @@ export function useSubmit(
       await submitFunction();
       onComplete();
     } catch (e) {
-      setSubmitError(e);
+      setSubmitError(e as Error);
     } finally {
       setSubmitting(false);
     }

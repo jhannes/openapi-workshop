@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useContext, useState } from "react";
-import { PetDtoStatusEnum } from "@jhannes/openapi-workshop";
+import { PetDtoStatusEnum } from "../generated";
 import { ApiContext } from "../applicationContext";
 import { useLoader } from "../lib/useLoader";
 import { Link } from "react-router-dom";

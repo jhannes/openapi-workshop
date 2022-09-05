@@ -8,3 +8,4 @@ react-client/dist
 src/local
 /logs
 /react-client/coverage/
+/react-client/src/generated/

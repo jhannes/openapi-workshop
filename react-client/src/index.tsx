@@ -7,7 +7,7 @@ import {
   PetApi,
   StoreApi,
   UserApi,
-} from "@jhannes/openapi-workshop";
+} from "./generated";
 import { BrowserRouter, Link } from "react-router-dom";
 import { Route, Switch, useHistory } from "react-router";
 import { useLoader } from "./lib/useLoader";
@@ -17,7 +17,7 @@ import { ErrorView } from "./views/ErrorView";
 import { useLocalStorage } from "./lib/useLocalStorage";
 import { LoginPage } from "./login/LoginPage";
 import { PetsPage } from "./pets";
-import { LoggedOutError } from "@jhannes/openapi-workshop/dist/base";
+import { LoggedOutError } from "./generated/base";
 import { ListCategories } from "./categories/ListCategories";
 import { ProfilePage } from "./login/ProfilePage";
 import { AppLocale, LocaleContext } from "./localization/applicationLocale";
