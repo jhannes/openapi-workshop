@@ -6,6 +6,7 @@ import com.soprasteria.workshop.openapi.generated.petstore.UserDto;
 import com.soprasteria.workshop.infrastructure.servlet.PetStoreUser;
 import org.actioncontroller.exceptions.HttpUnauthorizedException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -16,7 +17,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class UserControllerTest extends AbstractDatabaseTest {
 
     private final UserController controller = new UserController(dbContext);
-    private ApiSampleData apiSampleData = new ApiSampleData(200);
+    private final ApiSampleData apiSampleData;
+
+    public UserControllerTest(TestInfo testInfo) {
+        this.apiSampleData = new ApiSampleData(testInfo.getTestMethod());
+    }
 
     @Test
     void shouldSaveUser() {
@@ -32,19 +37,13 @@ class UserControllerTest extends AbstractDatabaseTest {
         UserDto originalUser = apiSampleData.sampleUserDto();
         controller.createUser(originalUser);
         String username = originalUser.getUsername();
-        controller.updateUser(username, new UserDto()
-                .username("ignored-username-change")
-                .firstName("Newfirst").lastName("Newlast")
-                .phone("5559876")
-        );
+        UserDto updatedUser = apiSampleData.sampleUserDto().username("ignored-username-change").email(null).password(null);
+        controller.updateUser(username, updatedUser);
 
         assertThat(controller.getUserByName(username))
                 .usingRecursiveComparison()
-                .isEqualTo(new UserDto()
-                        .username(username)
-                        .email(originalUser.getEmail())
-                        .firstName("Newfirst").lastName("Newlast")
-                        .phone("5559876"));
+                .ignoringFields("username", "email")
+                .isEqualTo(updatedUser);
     }
 
     @Test

@@ -40,7 +40,9 @@ class StoreControllerTest extends AbstractDatabaseTest {
         OrderDto orderDto = apiSampleData.sampleOrderDto().petId(pet.getId());
         UUID orderId = controller.placeOrder(orderDto);
         assertThat(controller.getOrderById(orderId))
-                .isEqualToIgnoringGivenFields(orderDto, "id");
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(orderDto);
     }
 
     @Test

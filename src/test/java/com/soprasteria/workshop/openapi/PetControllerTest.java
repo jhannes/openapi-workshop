@@ -1,5 +1,6 @@
 package com.soprasteria.workshop.openapi;
 
+import com.soprasteria.workshop.infrastructure.repository.EntityNotFoundException;
 import com.soprasteria.workshop.openapi.controllers.ApiSampleData;
 import com.soprasteria.workshop.openapi.controllers.PetController;
 import com.soprasteria.workshop.openapi.domain.Category;
@@ -7,7 +8,6 @@ import com.soprasteria.workshop.openapi.domain.repository.AbstractDatabaseTest;
 import com.soprasteria.workshop.openapi.domain.repository.CategoryRepository;
 import com.soprasteria.workshop.openapi.generated.petstore.CategoryDto;
 import com.soprasteria.workshop.openapi.generated.petstore.PetDto;
-import com.soprasteria.workshop.infrastructure.repository.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -32,18 +32,21 @@ class PetControllerTest extends AbstractDatabaseTest {
 
     private final PetController controller = new PetController(dbContext);
     public CategoryDto sampleCategory;
-    public ApiSampleData apiSampleData;
+    private final ApiSampleData apiSampleData;
     private static final String servletUrl = "https://petstore.example.com/petstore/api";
-    private TestPetStoreUser user = new TestPetStoreUser();
+    private final TestPetStoreUser user = new TestPetStoreUser();
+
+    public PetControllerTest(TestInfo testInfo) {
+        this.apiSampleData = new ApiSampleData(testInfo.getTestMethod());
+    }
 
     @BeforeEach
-    public void insertCategories(TestInfo testInfo) {
+    public void insertCategories() {
         CategoryRepository repository = new CategoryRepository(dbContext);
         for (String categoryName : CATEGORIES) {
             repository.save(new Category(categoryName));
         }
         sampleCategory = new CategoryDto().id(sampleData.pickOneFromList(controller.listCategories()).getId());
-        apiSampleData = new ApiSampleData(testInfo.getTestMethod());
     }
 
     @Test
