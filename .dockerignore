@@ -1,0 +1,9 @@
+.idea
+target
+*.iml
+logs
+react-client/.parcel-cache
+react-client/dist
+react-client/coverage
+react-client/node_modules
+react-client/src/generated

@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.util.Optional;
 
 public class PetStoreServer {
@@ -46,8 +45,10 @@ public class PetStoreServer {
     }
 
     private void setupConfiguration() {
-        int port = Optional.ofNullable(System.getenv("HTTP_PLATFORM_PORT")).map(Integer::parseInt)
-                .orElse(8080);
+        int port = Optional.ofNullable(System.getenv("HTTP_PLATFORM_PORT"))
+                .or(() -> Optional.ofNullable(System.getenv("PORT")))
+                .map(Integer::parseInt)
+                .orElse(80);
 
         new ConfigObserver("petstore")
                 .onInetSocketAddress("http.port", port, this::setHttpPort)
@@ -80,12 +81,8 @@ public class PetStoreServer {
         if (server.isStarted()) {
             connector.stop();
             connector.start();
-            logger.warn("Started on {}", getURI());
+            logger.warn("Started on port {}", connector.getLocalPort());
         }
-    }
-
-    public URI getURI() {
-        return server.getURI();
     }
 
 
