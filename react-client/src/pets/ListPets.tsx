@@ -28,8 +28,8 @@ function ShowPetList({ statuses }: { statuses: PetDtoStatusEnum[] }) {
 
   return (
     <div>
-      {pets.data.map(({ id, name }) => (
-        <div key={id}>{name}</div>
+      {pets.data.map((pet) => (
+        <div key={pet.id}>{pet.name}</div>
       ))}
     </div>
   );

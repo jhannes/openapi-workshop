@@ -28,7 +28,12 @@ export function NewPet() {
   const { handleSubmit, submitting, submitError } = useSubmit(
     async () => {
       return await petApi.addPet({
-        petDto: { status, category: { id: categoryId }, name, tags: [] },
+        petDto: {
+          status,
+          category: { id: categoryId },
+          name,
+          tags: []
+        },
         security: security!,
       });
     },
