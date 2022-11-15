@@ -139,7 +139,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>frr-typescript-fetch-api</id>
+                        <id>typescript-fetch-api</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
